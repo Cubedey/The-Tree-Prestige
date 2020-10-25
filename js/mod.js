@@ -1,7 +1,7 @@
 let modInfo = {
-	name: "The ??? Tree",
-	id: "mymod",
-	pointsName: "points",
+	name: "The Tree",
+	id: "MYTrees",
+	pointsName: "Water",
 	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
@@ -11,8 +11,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "1.0",
+	name: "Idk Bro Trees Go brrrr",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -28,12 +28,20 @@ function canGenPoints(){
 	return true
 }
 
-// Calculate points/sec!
+// Calwlate points/sec!
 function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
+	let base = new Decimal(1)
+	if (player.c.points > 0) {base = base.add(1).pow(player.c.points.pow(.8))}
+	if (hasMilestone("c", "2")) {base = base.times(player.c.WaterMultiplier)}
+	gain = base
+	if (hasUpgrade("p", 11)) gain = gain.times(upgradeEffect("p", 11))
+	if (hasUpgrade("p", 13)) gain = gain.times(upgradeEffect("p", 13))
+	if (hasUpgrade("p", 14)) gain = gain.times(upgradeEffect("p", 14))
+	if (gain < 1 && base > 0) {gain = base} 
 	return gain
 }
 

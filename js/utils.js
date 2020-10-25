@@ -265,24 +265,24 @@ var saveInterval = setInterval(function() {
 // ************ Themes ************
 
 const themes = {
-	1: "aqua"
+	1: "tree",
 }
 const theme_names = {
-	aqua: "Aqua"
+	tree: "tree"
 }
 
 function changeTheme() {
-	let aqua = player.theme == "aqua"
-	colors_theme = colors[player.theme || "default"]
-	document.body.style.setProperty('--background', aqua ? "#001f3f" : "#0f0f0f")
-	document.body.style.setProperty('--background_tooltip', aqua ? "rgba(0, 15, 31, 0.75)" : "rgba(0, 0, 0, 0.75)")
-	document.body.style.setProperty('--color', aqua ? "#bfdfff" : "#dfdfdf")
-	document.body.style.setProperty('--points', aqua ? "#dfefff" : "#ffffff")
-	document.body.style.setProperty("--locked", aqua ? "#c4a7b3" : "#bf8f8f")
+	let tree = player.theme == "tree"
+	colors_theme = colors[player.theme || "untree"]
+	document.body.style.setProperty('--background', tree ? "#2c1c03" : "#0f0f0f")
+	document.body.style.setProperty('--background_tooltip', tree ? "#000000" : "rgba(0, 0, 0, 0.75)")
+	document.body.style.setProperty('--color', tree ? "#639e47" : "#dfdfdf")
+	document.body.style.setProperty('--points', tree ? "#0059b3" : "#ffffff")
+	document.body.style.setProperty("--locked", tree ? "#000000" : "#bf8f8f")
 }
 
 function getThemeName() {
-	return player.theme ? theme_names[player.theme] : "Default"
+	return player.theme ? theme_names[player.theme] : "untree"
 }
 
 function switchTheme() {

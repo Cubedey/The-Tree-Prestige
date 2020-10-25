@@ -23,11 +23,18 @@ function resizeCanvas() {
 }
 
 var colors = {
-	default: {
+	tree: {
+		1: "#42692f",
+		2: "#8b4513",
+		3: "#228b22",
+	},
+	untree: {
 		1: "#ffffff",
 		2: "#bfbfbf",
 		3: "#7f7f7f",
 	},
+	
+	
 	aqua: {
 		1: "#bfdfff",
 		2: "#8fa7bf",

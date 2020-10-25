@@ -2,6 +2,7 @@ var player;
 var needCanvasUpdate = true;
 var NaNalert = false;
 var gameEnded = false;
+var time;
 
 // Don't change this
 const TMT_VERSION = {
