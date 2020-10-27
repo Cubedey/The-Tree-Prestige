@@ -11,8 +11,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "1.0",
-	name: "Idk Bro Trees Go brrrr",
+	num: "1.05",
+	name: "Idk Bro Cool Trees Go brrrr",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -36,7 +36,7 @@ function getPointGen() {
 	let gain = new Decimal(1)
 	let base = new Decimal(1)
 	if (player.c.points > 0) {base = base.add(1).pow(player.c.points.pow(.8))}
-	if (hasMilestone("c", "2")) {base = base.times(player.c.WaterMultiplier)}
+	if (hasMilestone("c", "2")) {base = base.times(player.c.WaterMultiplier.pow(.2))}
 	gain = base
 	if (hasUpgrade("p", 11)) gain = gain.times(upgradeEffect("p", 11))
 	if (hasUpgrade("p", 13)) gain = gain.times(upgradeEffect("p", 13))

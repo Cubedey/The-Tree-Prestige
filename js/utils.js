@@ -278,7 +278,7 @@ function changeTheme() {
 	document.body.style.setProperty('--background_tooltip', tree ? "#000000" : "rgba(0, 0, 0, 0.75)")
 	document.body.style.setProperty('--color', tree ? "#639e47" : "#dfdfdf")
 	document.body.style.setProperty('--points', tree ? "#0059b3" : "#ffffff")
-	document.body.style.setProperty("--locked", tree ? "#000000" : "#bf8f8f")
+	document.body.style.setProperty("--locked", tree ? "#505050" : "#bf8f8f")
 }
 
 function getThemeName() {
