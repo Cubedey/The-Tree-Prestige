@@ -16,6 +16,8 @@ body {
 	background-color: var(--background);
 	background-blend-mode: multiply;
 	background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://scx2.b-cdn.net/gfx/news/2018/europeslostf.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
 	color: var(--color);
 	overflow: hidden;
 	--background: #0f0f0f;
