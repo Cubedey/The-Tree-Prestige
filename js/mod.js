@@ -40,10 +40,12 @@ function getPointGen() {
 	if (hasUpgrade("c", 11)) {base = base.times(upgradeEffect("c", 11))}
 	if (hasMilestone("c", 2)) {base = base.times(player.c.WaterMultiplier.pow(.2))}
 	if (player.m.points.gte(1)) {base = base.times(getMBuyableEff(11))}
+	if (player.m.points > 0) base = base.times(new Decimal(2).times(player.m.points))
 	gain = base
 	if (hasUpgrade("p", 11)) gain = gain.times(upgradeEffect("p", 11))
 	if (hasUpgrade("p", 13)) gain = gain.times(upgradeEffect("p", 13))
 	if (hasUpgrade("p", 14)) gain = gain.times(upgradeEffect("p", 14))
+	
 	if (gain < 1 && base > 0) {gain = base} 
 	if (gain.lt(1)) {gain = new Decimal(1)}
 	return gain

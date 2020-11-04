@@ -40,6 +40,7 @@ addLayer("p", {
             if (hasUpgrade("p", 12)) mult = mult.times(upgradeEffect("p", 12))
             if (player.g.points > 0) mult = mult.times(player.g.MagnifyingLevel)
             if (hasUpgrade("p", 14)) mult = mult.times(player.p.ClickerMultiplier) 
+            if (player.m.points > 0) mult = mult.times(new Decimal(2).times(player.m.points))
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
@@ -328,8 +329,8 @@ addLayer("g", {
         },
         increaseUnlockOrder: ["c", "g"],
         update(diff) {if (player.g.points > 0) {
-        if (getBuyableAmount("m", 22) > 0 && player.g.points > 0) player.g.MagnifyingLevel = player.g.MagnifyingLevel.add((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(1))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2)).add(1)))).times(upgradeEffect("g", 11).times(getMBuyableEff(12))).multiply(20))
-        else player.g.MagnifyingLevel = player.g.MagnifyingLevel.add(player.g.points.multiply(player.g.currentMagnifyingRate).times(upgradeEffect("g", 11).times(getMBuyableEff(12))))}; 
+        if (getBuyableAmount("m", 22) > 0 && player.g.points > 0) player.g.MagnifyingLevel = player.g.MagnifyingLevel.add((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(1))).div(((player.g.points.add(1).multiply(player.g.currentMagnifyingRate)).log(2)).add(1)))).times(upgradeEffect("g", 11).times(getMBuyableEff(12))).multiply(20))
+        else if (player.g.points>0)player.g.MagnifyingLevel = player.g.MagnifyingLevel.add(player.g.points.add(1).multiply(player.g.currentMagnifyingRate).times(upgradeEffect("g", 11).times(getMBuyableEff(12))))}; 
         if (hasMilestone("g", 2)) {player.g.magnifierLevel = player.g.magnifierLevel.add(player.g.magnifyingleveladdrate)} 
         if (hasMilestone("g", 2) && player.g.magnifierLevel > 101) {player.g.magnifyingleveladdrate = new Decimal(-10)}
         if (hasMilestone("g", 2) && player.g.magnifierLevel < 0) {player.g.magnifyingleveladdrate = new Decimal(10)}
@@ -452,8 +453,9 @@ addLayer("g", {
             return ret},
         effectDescription() {if (hasMilestone("g", 2)) {
         let mult = "and Magnifierying Levels go brrrr, multiplying base branch gain by " + format(player.g.MagnifyingLevel) 
-        let rate = ", which are producing the levels at a rate of " + format(((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(2))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2)).add(1)))).times(upgradeEffect("g", 11).times(getMBuyableEff(12))).multiply(20))) + " a second"  
-        if (getBuyableAmount("m", 22) < 1) rate = ", which are producing the levels at a rate of " + format(player.g.points.multiply(player.g.currentMagnifyingRate).times(upgradeEffect("g", 11).times(getMBuyableEff(12))).multiply(20)) + " a second"
+        let rate = ", which are producing the levels at a rate of " + format(player.g.points.multiply(player.g.currentMagnifyingRate).multiply(upgradeEffect("g", 11)).multiply(getMBuyableEff(12)).multiply(20)) + " a second"
+        if (getBuyableAmount("m", 22) > 0 && player.g.points > 0) rate = ", which are producing the levels at a rate of " + format(((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(2))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2)).add(1)))).times(upgradeEffect("g", 11).times(getMBuyableEff(12))).multiply(20))) + " a second" 
+        else if (player.g.points < 0) rate = ", which are producing the levels at a rate of 0 a second" 
         return mult + rate}},
             
         gainMult() { // Calculate the multiplier for main currency from bonuses
@@ -465,7 +467,7 @@ addLayer("g", {
         },
         row: 1, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
-            {key: "m", description: "Reset for Magnifying Glasses", onPress(){if (canReset(this.layer)) doReset(this.layer) }},
+            {key: "g", description: "Reset for Magnifying Glasses", onPress(){if (canReset(this.layer)) doReset(this.layer) }},
         ],
         canBuyMax() {
   
@@ -484,11 +486,12 @@ addLayer("g", {
                 description: "Magnifying Glasses Generate More Based On How Many There Are",
                 cost: new Decimal(2),
                 effect() {
+                    if (player.g.points > 0){
                     let ret = player.g.points.times(2).pow(.8)
                     if (getBuyableAmount("m", 22)) ret = player.g.points.times(2).pow(.2)
                     if (ret.gte("1e20000000")) ret = ret.sqrt().times("1e10000000")
                     return ret;
-                        }
+            }}
                     },
                     12: {
                         title: "Anyone Can Pretend",
