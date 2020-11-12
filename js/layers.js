@@ -40,7 +40,7 @@ addLayer("p", {
             if (hasUpgrade("p", 12)) mult = mult.times(upgradeEffect("p", 12))
             if (player.g.points > 0) mult = mult.times(player.g.MagnifyingLevel)
             if (hasUpgrade("p", 14)) mult = mult.times(player.p.ClickerMultiplier) 
-            if (player.m.points > 0) mult = mult.times(new Decimal(2).times(player.m.points))
+            if (player.m.points > 0) mult = mult.times(player.m.points.times(player.m.points).add(1))
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
@@ -160,7 +160,7 @@ addLayer("c", {
             },
             requires() {if (player[this.layer].unlockOrder > 0 &&! hasUpgrade("c", 12)) {return new Decimal(675000)} else {return new Decimal(2500)}},
         update(diff) {player.c.WaterMultiplier = player.c.WaterMultiplier.times(.998)
-            if (getBuyableAmount("m" , 21) > 0 && getResetGain("c") > 1 && player[this.layer].unlocked == true) {generatePoints("c", (diff*(getMBuyableEff(21))))}
+            if (getBuyableAmount("m" , 31) > 0 && getResetGain("c") > 1 && player[this.layer].unlocked == true) {generatePoints("c", (diff*(getMBuyableEff(31))))}
         },
         base() {if (player.c.canbuymax == true) {return new Decimal(100)} else {return new Decimal(2)}},
         
@@ -171,7 +171,7 @@ addLayer("c", {
             "Can Filling": 
             {content:[
                 "main-display",["bar", "bigBar"],["clickable", "11"], ],
-            unlocked() {if (player.c.points.gte(5)) return true; else return false}     }
+            unlocked() {if (hasMilestone("c", 2)) return true; else return false}     }
             
     },
         bars: {
@@ -179,7 +179,7 @@ addLayer("c", {
                 direction: UP,
                 width: 50,
                 height:  250,
-                display() {return player.c.WaterMultiplier.round() + "X"},
+                display() {return player.c.WaterMultiplier.round() + "G"},
                 fillStyle: {'background-color' : "#0059b3"},
                 baseStyle: {'background-color' : "#000000"},
                 textStyle: {'color': '#70b7ff'},
@@ -237,14 +237,14 @@ addLayer("c", {
                     },        
         
         },
-        exponent() {if (getBuyableAmount("m", 21) < 1){return new Decimal(1)} else return new Decimal(.25)},
+        exponent() {if (getBuyableAmount("m", 31) < 1){return new Decimal(1)} else return new Decimal(.25)},
         branches: [["p", 1]],
         color: "#0059b3 ",
          // Can be a function that takes requirement increases into account
         resource: "Watering Cans", // Name of prestige currency
         baseResource: "Tree Branches", // Name of resource prestige is based on
         baseAmount() {return player.p.points}, // Get the current amount of baseResource
-        type() {if (getBuyableAmount("m", 21) > 0) {return "normal"} else return "static"}, // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+        type() {if (getBuyableAmount("m", 31) > 0) {return "normal"} else return "static"}, // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
         canBuyMax() {
             return player.c.canbuymax
         },
@@ -257,11 +257,11 @@ addLayer("c", {
         return ret},
         effectDescription()
         {
-            let mult = "multiplying base water gain by " + format(new Decimal(2).pow(player.c.points.pow(.8)).times(getMBuyableEff(11)))
+            let mult = "multiplying base water gain by " + format(new Decimal(2).pow(player.c.points.pow(.8)).times(getMBuyableEff(21)))
             if (hasUpgrade("c", 11)) mult = "multiplying base water gain by " + 
-            format(new Decimal(2).pow(player.c.points.pow(.8)).times(upgradeEffect("c", 11)).times(getMBuyableEff(11)))
-            if (getBuyableAmount("m", 21)>0 && player.c.points > 0) mult = "multiplying base water gain by " + 
-            format(new Decimal(2).pow((new Decimal(17).sub((new Decimal(17).sub(new Decimal(2))).div((player.c.points.log(2)).add(1))))).times(upgradeEffect("c", 11)).times(getMBuyableEff(11)))
+            format(new Decimal(2).pow(player.c.points.pow(.8)).times(upgradeEffect("c", 11)).times(getMBuyableEff(21)))
+            if (getBuyableAmount("m", 31)>0 && player.c.points > 0) mult = "multiplying base water gain by " + 
+            format(new Decimal(2).pow((new Decimal(22).sub((new Decimal(22).sub(new Decimal(2))).div((player.c.points.log(2)).add(1))))).times(upgradeEffect("c", 11)).times(getMBuyableEff(21)))
             let fill = ", and fill level multiplying base water gain by " + player.c.WaterMultiplier.pow(.2).round()
             let click = ", and clicking the clicking multiplier by " + format(((new Decimal(.05)).pow(player.p.ClickerMultiplier).times(player.c.WaterMultiplier.div(10)))) + " times a second"
             if (hasMilestone("c", 2)) {return mult + fill + click} else return mult
@@ -283,10 +283,11 @@ addLayer("c", {
             {key: "c", description: "Reset for Watering Cans", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
 
         ],
-        layerShown(){if (player.p.points.gte((tmp[this.layer].requires).times(.5))) {return true}; 
-        if (player.m.points > 0) {return true}; 
-        if (player[this.layer].points > 1) {player[this.layer].unlocked = true}
-        return player[this.layer].unlocked},
+        layerShown()
+        {if (player.p.points.gte((tmp[this.layer].requires).times(.5))) {return true}; 
+         if (player.m.points > 0) {return true}; 
+         if (player[this.layer].points > 1) {player[this.layer].unlocked = true}  return player[this.layer].unlocked
+        },
         milestones: {
             1: {
                 requirementDescription: "2 Watering Cans",
@@ -329,13 +330,17 @@ addLayer("g", {
         },
         increaseUnlockOrder: ["c", "g"],
         update(diff) {if (player.g.points > 0) {
-        if (getBuyableAmount("m", 22) > 0 && player.g.points > 0) player.g.MagnifyingLevel = player.g.MagnifyingLevel.add((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(1))).div(((player.g.points.add(1).multiply(player.g.currentMagnifyingRate)).log(2)).add(1)))).times(upgradeEffect("g", 11).times(getMBuyableEff(12))).multiply(20))
-        else if (player.g.points>0)player.g.MagnifyingLevel = player.g.MagnifyingLevel.add(player.g.points.add(1).multiply(player.g.currentMagnifyingRate).times(upgradeEffect("g", 11).times(getMBuyableEff(12))))}; 
+        //if (getBuyableAmount("m", 32) > 0 && player.g.points > 0 && hasUpgrade("c", 1)) {player.g.MagnifyingLevel = player.g.MagnifyingLevel.add((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(2))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2))))).times(upgradeEffect("g", 11).times(getMBuyableEff(22))).multiply(20))}
+        //else if (getBuyableAmount("m", 32) > 0 && player.g.points > 0) {player.g.MagnifyingLevel = player.g.MagnifyingLevel.add((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(2))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2))))).times(getMBuyableEff(22))).multiply(20)}
+        if (getBuyableAmount("m", 32) > 0 && player.g.points > 0 && hasUpgrade("g", 11)) player.g.MagnifyingLevel = player.g.MagnifyingLevel.add(((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(2))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2)).add(1))))).times(upgradeEffect("g", 11).times(getMBuyableEff(22))))
+        else if (getBuyableAmount("m", 32) > 0 && player.g.points > 0) player.g.MagnifyingLevel = player.g.MagnifyingLevel.add(((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(2))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2)).add(1))))).times((getMBuyableEff(22))))
+        else if (player.g.points > 0 && hasUpgrade("g", 11)) {player.g.MagnifyingLevel = player.g.MagnifyingLevel.add(player.g.points.add(1).multiply(player.g.currentMagnifyingRate).times(upgradeEffect("g", 11).times(getMBuyableEff(22))).div(2))} 
+        else if (player.g.points > 0) {player.g.MagnifyingLevel = player.g.MagnifyingLevel.add(player.g.points.add(1).multiply(player.g.currentMagnifyingRate).times((getMBuyableEff(22))).div(2))} 
         if (hasMilestone("g", 2)) {player.g.magnifierLevel = player.g.magnifierLevel.add(player.g.magnifyingleveladdrate)} 
         if (hasMilestone("g", 2) && player.g.magnifierLevel > 101) {player.g.magnifyingleveladdrate = new Decimal(-10)}
         if (hasMilestone("g", 2) && player.g.magnifierLevel < 0) {player.g.magnifyingleveladdrate = new Decimal(10)}
-        if (getBuyableAmount("m" , 22) > 0 && getResetGain("g") > 1 && player[this.layer].unlocked == true) {generatePoints("g", (diff*(getMBuyableEff(22))))}
-        },
+        if (getBuyableAmount("m" , 32) > 0 && getResetGain("g") > 1 && player[this.layer].unlocked == true) {generatePoints("g", (diff*(getMBuyableEff(32))))}
+        }},
         branches: [["p", 1]],
         color: "#ababab ",
         base() {if (player.g.canbuymax == true) {return new Decimal(100)} else {return new Decimal(2)}},
@@ -447,14 +452,17 @@ addLayer("g", {
         resource: "Magnifying Glasses", // Name of prestige currency
         baseResource: "Tree Branches", // Name of resource prestige is based on
         baseAmount() {return player.p.points}, // Get the current amount of baseResource
-        type() {if (getBuyableAmount("m", 22) > 0) {return "normal"} else return "static"}, // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-        exponent() {if (getBuyableAmount("m", 22) < 1){return new Decimal(1)} else return new Decimal(.25)}, // Prestige currency exponent
+        type() {if (getBuyableAmount("m", 32) > 0) {return "normal"} else return "static"}, // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+        exponent() {if (getBuyableAmount("m", 32) < 1){return new Decimal(1)} else return new Decimal(.25)}, // Prestige currency exponent
         effect() {let ret = new Decimal(1).add(1).pow(player.c.points)
             return ret},
-        effectDescription() {if (hasMilestone("g", 2)) {
+        effectDescription() { {
         let mult = "and Magnifierying Levels go brrrr, multiplying base branch gain by " + format(player.g.MagnifyingLevel) 
-        let rate = ", which are producing the levels at a rate of " + format(player.g.points.multiply(player.g.currentMagnifyingRate).multiply(upgradeEffect("g", 11)).multiply(getMBuyableEff(12)).multiply(20)) + " a second"
-        if (getBuyableAmount("m", 22) > 0 && player.g.points > 0) rate = ", which are producing the levels at a rate of " + format(((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(2))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2)).add(1)))).times(upgradeEffect("g", 11).times(getMBuyableEff(12))).multiply(20))) + " a second" 
+        let rate = ", which are producing the levels at a rate of " + format(player.g.points.multiply(player.g.currentMagnifyingRate).multiply(getMBuyableEff(22)).multiply(20)) + " a second"
+        if (hasUpgrade("g", 11)) rate = ", which are producing the levels at a rate of " + format(player.g.points.multiply(player.g.currentMagnifyingRate).multiply(upgradeEffect("g", 11)).multiply(getMBuyableEff(22)).multiply(20)) + " a second"
+        
+        if (getBuyableAmount("m", 32) > 0 && player.g.points > 0 && hasUpgrade("g", 11)) rate = ", which are producing the levels at a rate of " + format(((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(2))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2)).add(1))))).times(upgradeEffect("g", 11).times(getMBuyableEff(22))).multiply(20)) + " a second" 
+        else if (getBuyableAmount("m", 32) > 0 && player.g.points > 0) rate = ", which are producing the levels at a rate of " + format(((new Decimal(200000000).sub((new Decimal(200000000).sub(new Decimal(2))).div(((player.g.points.multiply(player.g.currentMagnifyingRate)).log(2)).add(1))))).times((getMBuyableEff(22))).multiply(20)) + " a second" 
         else if (player.g.points < 0) rate = ", which are producing the levels at a rate of 0 a second" 
         return mult + rate}},
             
@@ -488,7 +496,7 @@ addLayer("g", {
                 effect() {
                     if (player.g.points > 0){
                     let ret = player.g.points.times(2).pow(.8)
-                    if (getBuyableAmount("m", 22)) ret = player.g.points.times(2).pow(.2)
+                    if (getBuyableAmount("m", 32)) ret = player.g.points.times(2).pow(.2)
                     if (ret.gte("1e20000000")) ret = ret.sqrt().times("1e10000000")
                     return ret;
             }}
@@ -534,30 +542,79 @@ addLayer("m", {
         startData() { return {
             unlocked: false,
             points: new Decimal(0),
-           
-            
+            factoriesextra: new Decimal(0),
+            samuelsextra: new Decimal(0),
+            apesextra: new Decimal(0),
+            godsextra: new Decimal(0),
+            autobuyon: false,
         }},
+        update(diff)
+        {
+            if (getBuyableAmount("m", 12) > 0) {player.m.factoriesextra = player.m.factoriesextra.add(getMBuyableEff(12).div(20))}
+            if (getBuyableAmount("m", 13) > 0) {player.m.samuelsextra = player.m.samuelsextra.add(getMBuyableEff(13).div(20))}
+            if (getBuyableAmount("m", 14) > 0) {player.m.apesextra = player.m.apesextra.add(getMBuyableEff(14).div(20))}
+            if (getBuyableAmount("m", 15) > 0) {player.m.godsextra = player.m.godsextra.add(getMBuyableEff(15).div(20))}
+        },
+        
+        automate() {
+            if (hasMilestone("m", 2)) {if (canReset(this.layer)) {doReset(this.layer)}}
+            if (hasUpgrade("m", 15) && player.m.autobuyon == true) {buyBuyable("m", 15)}
+            if (hasUpgrade("m", 14) && player.m.autobuyon == true) {buyBuyable("m", 14)}
+            if (hasUpgrade("m", 13) && player.m.autobuyon == true) {buyBuyable("m", 13)}
+            if (hasUpgrade("m", 12) && player.m.autobuyon == true) {buyBuyable("m", 12)}
+            if (hasUpgrade("m", 11) && player.m.autobuyon == true) {buyBuyable("m", 11)}
+            
+            
+            
+            
+        },
         branches: [["c", 1], ["g", 1]],
         nodeStyle() {
             {return {'border-color': '#7b9095','background-image': 'url(data:image/jpeg;base64,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)', 'background-repeat':'no-repeat','background-size':'cover','background-position':''
         }}},
+        
         effectDescription() {
-            let mult = "multiplying buyables effect and base water and branch gain by " + player.m.points.times(2)
+            let mult = "multiplying buyables effect and base water and branch gain by " + format(player.m.points.times(player.m.points).add(1))
             //if (hasUpgrade("c", 11)) mult = "multiplying base water gain by " + format(new Decimal(2).pow(player.c.points.pow(.8)).times(upgradeEffect("c", 11)))
             //let fill = ", and fill level multiplying base water gain by " + player.c.WaterMultiplier.pow(.2).round()
             //let click = ", and clicking the clicking multiplier by " + format(((new Decimal(.05)).pow(player.p.ClickerMultiplier).times(player.c.WaterMultiplier.div(10)))) + " times a second"
             //if (hasMilestone("c", 2)) {return mult + fill + click} else 
             return mult
         },
+        canBuyMax() {
+            if (hasMilestone("m", 1)) return true
+        },
+        
+        milestones: {
+            1: {
+                requirementDescription: "2 Metal",
+                effectDescription: "----Imagine Reseting Everything Smh(PSTtt unlocks somethings) {PPs capitalims go beraerr}----",
+                done() {if (player.m.points.gte(2)) {return true}else {return false}},
+
+            },
+            2: {
+                requirementDescription: "50 Metal",
+                effectDescription: "Metal Autobuys Itself",
+                done() {if (player.m.points.gte(50)) {return true}else {return false}
+            },
+            
+
+            }},
         requires: new Decimal(20), // Can be a function that takes requirement increases into account
-        base: new Decimal(100),
+        base(){
+            
+            if (getBuyableAmount("m", 11) > 0 && (new Decimal(100).div(getMBuyableEff(11))) > 1)  return new Decimal(100).div(getMBuyableEff(11))
+            else if (getBuyableAmount("m", 11) > 0 && (new Decimal(100).div(getMBuyableEff(11))).lte(1)) {return new Decimal(1.00000001)} else {return (new Decimal(100))}
+            
+        },
         resource: "Metal", // Name of prestige currency
         baseResource: "Watering Cans and Magnifying Glasses", // Name of resource prestige is based on
         baseAmount() {return player.c.points && player.g.points}, // Get the current amount of baseResource
         type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-        exponent: 0.5, // Prestige currency exponent
+        exponent: 1, // Prestige currency exponent
         gainMult() { // Calculate the multiplier for main currency from bonuses
             mult = new Decimal(1)
+           
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
@@ -565,112 +622,385 @@ addLayer("m", {
         },
         row: 2, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
-            {key: "m", description: "Reset for Metal", onPress(){if (canReset(this.layer)) doReset(this.layer) }},
+            {key: "m", description: "Reset for Metal", onPress(){ if (canReset(this.layer)) {doReset(this.layer)} }},
         ],
-        layerShown(){if (layers.m.requires.times(.5) < player.c.points && player.g.points) {return true} else if (player.m.points.gte(1)) {return true} else {return false}},
+        resetsNothing() { if (hasMilestone("m", 1)) {return true} else false },
+        layerShown(){if (layers.m.requires.times(.5) < player.c.points && player.g.points) {return true}
+         else if (player.m.points.gte(1)) {player.m.unlocked = true} 
+         
+         return player.m.unlocked},
+         clickables: 
+         {  
+             rows: 1,
+            cols: 1,
+            11: {
+            display() {return "Swap Between Autobuying Factories on And Off:" + player.m.autobuyon},
+            canClick() {return true},
+            onClick() {player.m.autobuyon = !player.m.autobuyon},
+            unlocked() {return hasMilestone("c", 1)}
+        },},
         buyables: {
-            rows: 2,
-            cols: 2,
-            21: {
+            rows: 3,
+            cols: 5,
+            11: {
                 display() {
-                let desc = "<b><h2>Watering Cans Autogain(Makes Cans A Normal Cost Layer)</h2></b><br>"    
-                let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 21) + "</b><br>"
-                let eff = "<b><h2>Effect</h2>: " + format(getMBuyableEff(21).times(100)) + "%</b><br>"
-                let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(21)) + " Watering Cans</b><br>"
+                let desc = "<b><h2>Factory (Divides the Cost of the Metal)</h2></b><br>"    
+                let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 11) +"+" + format(player.m.factoriesextra) + " generated</b><br>"
+                let eff = "<b><h2>Effect</h2>:  ÷" + format(getMBuyableEff(11)) + " (unaffected by metal multiplier)</b><br>"
+                let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(11)) + " Metal</b><br>"
                 return desc + start + eff + cost},
                 cost(a) {
-                    let ret = getBuyableAmount("m", 21).pow(10).round()
+                    let ret = getBuyableAmount("m", 11).times(2).round()
+                    if (ret < 1) ret = new Decimal(1)
+                    return ret;
+                },
+                style: {
+                //    'color': "#FFFFFF", 'width' : "175px", 'height' : "175px", 'font-size' : "8pt", 'background-image' : "url(https://negativespace.co/wp-content/uploads/2020/05/negative-space-old-factory-building-1536x1025.jpg)" 
+                },
+                effect() {
+                    if ((getBuyableAmount("m", 11).add(player.m.factoriesextra)) > 0) {let x = ((new Decimal(100).sub((new Decimal(100).sub(new Decimal(1))).div(((getBuyableAmount("m", 11).add(player.m.factoriesextra)).log(10)).add(1)))))
+                    
+                    return x}
+        },
+                canAfford() {if (player.m.points.gte(getMBuyableCost(11))) {return true}},
+                unlocked() {if (player.m.points.gte(2) || getBuyableAmount("m", 11) > 0) {return true} else false},
+                buy() {let cost = getMBuyableCost(11)
+                    if (!layers.m.buyables[11].canAfford()) return
+                    player.m.buyables[11] = player.m.buyables[11].plus(1)
+                    if (!hasUpgrade("m", 25)) {player.m.points = player.m.points.minus(cost)}}
+            },
+            12: {
+                display() {
+                let desc = "<b><h2>Samuel Slaters (Produces Factories)</h2></b><br>"    
+                let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 12) +"+" + format(player.m.samuelsextra) + " generated</b><br>"
+                let eff = "<b><h2>Effect</h2>: generates Factories " + format(getMBuyableEff(12)) + " times a second(unaffected by metal multiplier)</b><br>"
+                let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(12)) + " Metal</b><br>"
+                return desc + start + eff + cost},
+                cost(a) {
+                    let ret = getBuyableAmount("m", 12).times(20).add(100).round()
+                    if (ret < 1) ret = new Decimal(100)
+                    return ret;
+                },
+                style: {
+                //    'color': "#ffffff", 'width' : "175px", 'height' : "175px", 'font-size' : "8pt", 'background-image' : "url(https://cdn.britannica.com/35/180935-050-9949F288/Samuel-Slater.jpg)" 
+                },
+                effect() {
+                    let x = getBuyableAmount("m", 12).add(player.m.samuelsextra).pow(.9)
+                    if (hasUpgrade("m", 21)) x = x.times(upgradeEffect("m", 21))
+                    if (hasUpgrade("m", 31)) x = x.times(upgradeEffect("m", 31))
+                    x = x.times(player.m.points.pow(2))
+                    
+                    return x;
+                },
+                canAfford() {if (player.m.points.gte(getMBuyableCost(12))) {return true}},
+                unlocked() {if (player.m.points.gte(50) || getBuyableAmount("m", 12) > 0) {return true} else false},
+                buy() {let cost = getMBuyableCost(12)
+                    if (!layers.m.buyables[12].canAfford()) return
+                    player.m.buyables[12] = player.m.buyables[12].plus(1)
+                    if (!hasUpgrade("m", 25)) {player.m.points = player.m.points.minus(cost)}}
+            },
+            13: {
+                display() {
+                let desc = "<b><h2>Apes (Produces Samuel Slaters)</h2></b><br>"    
+                let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 13) +"+" + format(player.m.apesextra) + " generated</b><br>"
+                let eff = "<b><h2>Effect</h2>: generates Samuel Slaters " + format(getMBuyableEff(13)) + " times a second(unaffected by metal multiplier)</b><br>"
+                let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(13)) + " Metal</b><br>"
+                return desc + start + eff + cost},
+                cost(a) {
+                    let ret = getBuyableAmount("m", 13).times(250).add(2000).round()
+                    if (ret < 1) ret = new Decimal(2000)
+                    return ret;
+                },
+                style: {
+                  //  'color': "#ffffff", 'width' : "175px", 'height' : "175px", 'font-size' : "8pt", 'background-image' : "url(https://media.npr.org/assets/img/2015/10/08/istock_000013696787_small-40f929a109f759d798fc1d8afc718cc78a2ac18b-s800-c85.jpg)" 
+                },
+                effect() {
+                    let x = getBuyableAmount("m", 13).add(player.m.apesextra).pow(.8)
+                    if (hasUpgrade("m", 22)) x = x.times(upgradeEffect("m", 22))
+                    if (hasUpgrade("m", 31)) x = x.times(upgradeEffect("m", 31))
+                    x = x.times(player.m.points.pow(2))
+                    if (x < 1) x = new Decimal(1)
+                    return x;
+                },
+                canAfford() {if (player.m.points.gte(getMBuyableCost(13))) {return true}},
+                unlocked() {if (player.m.points.gte(1500) || getBuyableAmount("m", 13) > 0) {return true} else false},
+                buy() {let cost = getMBuyableCost(13)
+                    if (!layers.m.buyables[13].canAfford()) return
+                    player.m.buyables[13] = player.m.buyables[13].plus(1)
+                    if (!hasUpgrade("m", 25)) {player.m.points = player.m.points.minus(cost)}}
+            },
+            14: {
+                display() {
+                let desc = "<b><h2>Gods (Produces Apes)</h2></b><br>"    
+                let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 14) +"+" + format(player.m.godsextra) + " generated</b><br>"
+                let eff = "<b><h2>Effect</h2>: generates Apes " + format(getMBuyableEff(14)) + " times a second(unaffected by metal multiplier)</b><br>"
+                let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(14)) + " Metal</b><br>"
+                return desc + start + eff + cost},
+                cost(a) {
+                    let ret = getBuyableAmount("m", 14).times(500).add(4000).round()
+                    
+                    if (ret < 1) ret = new Decimal(4000)
+                    return ret;
+                },
+                style: {
+                //    'color': "#ffffff", 'width' : "175px", 'height' : "175px", 'font-size' : "8pt", 'background-image' : "url(https://www.nme.com/wp-content/uploads/2020/08/Doom-Eternal.jpg)", 'background-size':'contain' 
+                },
+                effect() {
+                    let x = getBuyableAmount("m", 14).add(player.m.godsextra).pow(.7)
+                    if (hasUpgrade("m", 23)) x = x.times(upgradeEffect("m", 23))
+                    if (hasUpgrade("m", 31)) x = x.times(upgradeEffect("m", 31))
+                    x = x.times(player.m.points.pow(2))
+                    if (x < 1) x = new Decimal(1)
+                    return x;
+                },
+                canAfford() {if (player.m.points.gte(getMBuyableCost(14))) {return true}},
+                unlocked() {if (player.m.points.gte(3000) || getBuyableAmount("m", 14) > 0) {return true} else false},
+                buy() {let cost = getMBuyableCost(14)
+                    if (!layers.m.buyables[14].canAfford()) return
+                    player.m.buyables[14] = player.m.buyables[14].plus(1)
+                    if (!hasUpgrade("m", 25)) {player.m.points = player.m.points.minus(cost)}}
+            },
+            15: {
+                display() {
+                let desc = "<b><h2>P̷̧̢̨̢̨̢̡̢̨̨̧̢̧̢̛̛̲͙̱͔̼̤͖̣̣̪̲̳̳̯͙̲͈͓̦̖̝͖̯̖͚͖̺̦̮̳̰̬̣͚͉̥͚̙̱̰̟̻̫̼̳̘̪̱̭͈͙̲̤̠̗̯̬̻͔̮̟̯͎̯͍̹̻̰̜̘͉͖̣̱̙̼̖̻̪̗̝̥͖͉͕͕̺̙͙̘̰̰̥̲̪̖̯̣̩͈̤͉̖̫͖̬̰̻̜̱̖̲̲̝̺̦̠̼͎̱̜̳̲̜͍͈͉̜̥̰̲̫̋͋̀̆̿̔̄́̆̑́̐͐̒̍͗̉͋͛̒͛̀͐̈́̅̏̅̇́́̽̒͆̓̅̈̿̃̈̔̀̋̅̃̓́̃̃̈̒̈́̍̀̚͘͘͘̕̕̚̚̚͜͜͜͝͝͝͝͝͠ͅͅͅͅở̴̧̢̢̢̧̨̧̡̢̧̧̨̡̨̡̡̨̡̢̛̙͍̼̞͙̣̝͍̙̭̲̥̞̫̳̥̹̖̱̯̱̪̳̖͖̰̭̣̠̖̯̤̦͔̯̥̞̩̙̯̬͙̠̠̦͎̬͎̖̻̯͙̭͎͓̲͓͕̞͙͇͎͕̯͚̪̹̰͎̙̜̩̩͈̘̝̜̼̲̣̣̺̯̠͙̣̝̞̘̤͈̱̳̲͖͚̠̩͎̭͎̺͕̳͈̰̙͚̰͔͇͎̰͚̥̙͙̞̪̬͙̯̗͕͉̹͈͖̘̗͕̗̤̟͍̲̜͔̥͚̲̪͈̜̮̳̤̮̹͇̻̉̍̇͛͑̑̈́̈̍̂͂̌̔̋̇̂̇̏͊̓̌̒̄̄̋̐̏̅͂̿̀͑̓̄̿̏͆͌̋̀̿̽̌͒͒̀͒̎̓̽̽̊̉̈́́͛̂̉̊̀́̀́͆͌̅̂̈̊̃͆̈̌͑̄͊̔̂̐̎̑̓͐́̄̊̽́̀̔̾́̉̃̓͐̊̄̀́̑̐̽͋͆̍̒̊̋͐̀̈̂̓̎̌́̒̔̀̈́̊͊̅̎́̌̓̐̾̃́̈́̀̚͘͘͘͘̕̚͘̚͜͜͜͜͜͜͜͠͝͠͝͝͠͝͝͝͝͝͝ͅͅͅͅṭ̸̢̡̢̢̨̢̧̢̢̢̧̡̢̨̛̛̘̩̟̥̬̺̟̟̲͈̠̝̘̝͉͙̻̞̫̮̝͚̝̟̝̝̩̟̣̝̭͖̩͉̹̲͕̭̬̤̖̤͕̟͎̯̣̬̤͎̯̲̮̲̝̬͙̬̗̗͕̪͕͔̯̹̟͕̱̲̯̞̮̠͎͍̠̹͚̖͚͙͚̬̺̤̲̰̞̣̬̲̰̰̝̼̺͖̳̳̯͚͓͎̼̮̠̼̮̲̖̰̦̘͉͔̟͖̤̙͈̮͚̪̭͕̪̰̮̤̝̈́̎͊̾̈́̽̈́̓̂̐̔̃̎̏̒̑̓̔́̔́̑̇̾̂͐̆̔̅̏͛̊͒͋̈́̌̽̒͆͒̀̇̈͑̈́͗̾̓̿̒̌́̍̌̆̍̀͗͛̇̑̈̑̍̔̄̇̽̂͋̈̉̀͐͐̊̽̂͂̿̈̈́͗̆̈́̍̅̀͋̈̋̿̍͒̃́̍̾̒̈́͗̐̈̀̊̎̅́̾̓͋̎́̒̓̆͂̆̆͆͗̏͌̾͐̍̄͑̒̄̎͌̀̽̏̋̂̾̇̚̚͘̕̚͘̚̚̕͘̚͘̚͜͜͜͝͠͝͠͝͠͝͝͝͝͠͝͝͝͝͝͝͠͝͠ͅͅͅͅͅͅͅȃ̶̢̧̧̡̧̡̢̨̨̡̢̢̛̛̛̛͖̻̙͉̫͍̜̖͓̭͓̭͓̗̫̳͇̻̝͖͍̞̰̠̦͙͉̖̟̮͙̠̼͖̫͎̪̜̰͓͕̣̞̟͓͚͓̙̲̳̳͈̥̯̗̼̤͕̹̪̱̖̙̣̝̮̖̭̞͕̣͙̺̪̱̱̦̳̦͔̘̟͍̩͎̮̲̘͎̼̥͖̠̬̺̤̟͙̼̝͙̱̯̻͙̔̏͊̌̒͒̀͒́͂͆͐̐̀͂̾̌̑̉͛͛͊̓̆́́̿͊͆͛͒̇̄̄̒͌̐͐̐̅̓͌̏̆̈́̓̌͗͒̍̉͌̆͛̈́̀̆̆̾̇̕̕͘͜͜͝͠͝͝͠ͅt̷̡̧̡̢̢̡̢̢̢̧̢̧̡̡̨̡̡̢̛̲͙̘͉͉͚̞͕̘̭͈̝̝̤̦͓͍̳̼̼̘̗̣̮͖̟̥̖̺̪̣̫̗̟͙̭̻̙͉̭͇̝̣̲̤̱̖̯̣̩͉̝̻̙̱̲̩͉͚͔̞̗̩͇̩̹̣̘̰̰͔͕̮͙̩̮̦̻̩̤̫̟̲̹̠̤̩͓͍̫̳̲̪̱̯̠̰̯̞̬͈̰̻̙̺͓̞̙̞̱̙̻̮̦̳̖̞̩̘̘̝̮̼̱̱̫͉̙͍͔̠̻̩̥͚͈̳͓̪̘͇͉̜̪̘̹͍̠͎̝̣̻̰̰͚̠̖̣̜͖͍͌̂̾̽̌̿̒̉̋́̆͑̋̄̔̔̽̓̓̊̇͗͆̎̑̃̀́̈́̽͌́͊̎̍̈́͒́́́̽̑̇̉̓͑̾̒̋̀̊́̔̍͗̉͌̆̈́̍̽͒̆̓̓̐͗̋̏̅̔̒͋̈́́̂̌͒̽̂̓͐͌̀͌͌̃͊̀̓̀̉̔̾̌̉̀̒̅̌̊͋́̏͌͂̊͑́̄̃̉͌̽̽̓̾̅̎̇̀̂͂̔̃͒͗̂̀͌̋̏̀̎̓͌́̂͐͋̏̈́̔́̇͊̍̀̇͂͊́̚͘̚̕̚̚͘̕̕̚̚̕͘̕͜͜͠͝͠͠͝͝͝͠͠͝͝ͅͅở̷̡̧̧̨̧̨̧̨̡̧̧̛̛̫̫͍̙̞̣̱̫̙̤͉̻̬͔̹̮̙̻̗̞̩̦̹̳̺̜͕̹̝̩͎̲͔͇̘̥̝͍̰̱͍̪̦̦͍̤͇͎̟̼̦̫̯̪̱̲̜͇͙͍̯̯̣͖̟͒̀̓̊̎͋͊͆̄̈́̄͛̽͐̈̈́͊̓̓͊̆̍̒͛̓̈͐͗̋̍̈́̏͋̿̈́̆̈̉̅̌̌͗͊̌̏̂͒̓̐̈́́̾͒̉̉̽̾́̀̎̏̑̍̍͆̈͆̎̑͒̉͋͛͌͊̊̊̀̀̽́̂̽̂̅̓̑͆̓͒̈́̇̽̚̚̚̕͘̕̕͘̚̚̕͝͝͠͝͠ͅͅͅ ̸̡̨̡̧̡̧̧̨̡̛̪̹̖̻̥̬͙̥͙͍̞̩̲̤̖̹̝̯̹̩̝̦̥͈͓̘̘̝̥̬̤͙̙̯͍̼̜̣̘̜͔͉̺͎͇̮̗̯̥̯̝̻͓̙̼̲̬̠͍̗̩̫̥̮̱͔͖̥͙̯̰̙͉̙̌͛̀̿̊̿̊͋͆̂͋̎͂̊̈́̐͋̽͒͒̂͑̿̌̅͌̈́̄͊́̐̍̈́͗̍͋́̋̏̃͒̊̊̓̏̉̒͂́͂̇̓̄̔͊̈́̈́̀͑̑̑̿̇́̈́͌̐̃̀͐͛̄̐͛͐̏̾͑̿̇̔̍̑̅̾̏̒̚̚͘̕̚͘͝͠͠͝͝͠ͅͅM̴̧̨̧̢̡̡̧̛̛̛̙̦͉̤̻͔̝̱̰̣̦̺̺̞̙͇̹̞͎̻͇̪̪̗͕͓̞̲̲̖̱͙͇̮̲̭͓͈̤͚͙͓̰̠͍̳͎̮͇̺̳̻̮̩̦͉͚͈͕̭̖̳̘͍̤̺̦͎̻̳̙͓̰̩̺̯͍̯̳̻̦͚̻̦̯͔̲̭̮̥̳̬͙͙̞̞̙̟͔͓̻̤̩̻͇̫̪͉̃̒͛̆̊̓̎͂̍̇̉̅̀͒̇̇̋̉͑͋̍̎͗̈́͛̋̒̏̾̍͒̅̃̃̀̑̄͛̇͂̎͂͋͒̍̋̄̑͆͛̓̄̍͒́̀̏̌͐́͂͌̔͋̍̍̓̏̋̓̋͋̏͆̃̾̏̃͂̓̏͆̔͊̏͑̈́̕͘̕̚͘̕̚̚͘͝͠͠͝͝͠͝ͅͅͅͅͅâ̷̢̡̢̢̡̨̢̩͙͕͕̞͖͖̼̪̥̟̬̳͍̖̩̖̹̩͖͖̬̦̹͙͉̳̬̠̣̩̩͉̦̖͓̤͈͔̩͕̰̝̫͍͕̪̲̰̩̙̣̰͚͚̣͔̪̤̫̪͖̯̣̣̞̬̱̫͓̙̺̠̠̰̩͙̙̗͍̹̹̬̗̪͖̠̼͉͚͎̗̪͈̞̯̫͍͚̱̮̱̤̥̙͖̜͙͖͖̦͇̲͙͇̦̳̺̭͈̻̱͎͎͈̝̝̙̺̺̝̙̬̮̝̮̘͎͔̠̙͌̓̎̊̂͑̓͊̽̈͗͑̎̋̅̃̋̈́̿̓͊́͑́̾̈͒͋̊͑͑͑̃͌̃͂̏̑̆̀́̍͊̽̃̈́̆̍̈́̏̆͗͛͋̆̆͑̚͜͜͜͜͜͜͜͜͜͝͝͝͠͝ͅͅͅͅͅn̶̨̧̨̧̧̨̢̡̡̡̢̧̧̢̛̛̛̛̛̝̖̹̫͉̭̪̻̪̹̮̣̹̠̼̣͈͕͇͎̦̬͇̮̙͕̳̦̹̳̤͖̱̩̘̝̺̮̼̣̙͎͚̖͙̼̻̻̯͙̖̞̤͉̯̝̝̹͕̬͇̤͓̦̞̯̺̟̪̬̭̭̭̤̼̭̪͔͇̭̳̠͚̝̫̮̹̪̯̻̙̺͎̲̗͚̦̤̤̯̘͔̲̺͚͉͔̤̠̜͉͚̺̻͍̤̯͈̮̱̜̦͖͎̞̻̯͔̻̬͓͇̰̥̈́̒̒̏̐̋̊̎̈́̆̓̉́͗̋̽̍̈́̓̾̂̀̾̅͑͆̽̊̉̿͗̎́̂̔͒̊̀̊͊̂̋̑͗̈̀͐͌̒̈́̈́̉̉͆̃̈́̿̇̏̓̔́̍͆̒̏́̉͆̀̿̑͐̒̏̇͂̒̑͌͂̓̾̇̈́̋́̍̔̇̐̎̍͋͗̈́̓͛̋̈́̇́̓̔̕̚͘̚͘͘̚̚͜͜͜͜͜͝͝͝͠͝͝͠͠͝͠ͅͅͅͅ </h2></b><br>"    
+                //let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 15) +"+" + format(player.m) + " generated</b><br>"
+                //let eff = "<b><h2>Effect</h2>: generates Gods " + format(getMBuyableEff(15)) + " times a second(unaffected by metal multiplier)</b><br>"
+                let cost = "<b><h2></h2>" + format(getMBuyableCost(15)) + "</b><br>"
+                return desc + cost},
+                cost(a) {
+                    let ret = getBuyableAmount("m", 15).times(750).add(6500).round()
+                    if (ret < 1) ret = new Decimal(6500)
+                    return ret;
+                },
+                style: {
+                    'color': "#860111",// 'width' : "175px", 'height' : "175px", 'font-size' : "8pt", 'background-image' : "url(https://gardendesk.typepad.com/.a/6a00e54efed40888340133f4a245f0970b-pi)" 
+                },
+                effect() {
+                    let x = getBuyableAmount("m", 15).add(player.m).pow(2)
+                    if (hasUpgrade("m", 24)) x = x.times(upgradeEffect("m", 24))
+                    if (hasUpgrade("m", 31)) x = x.times(upgradeEffect("m", 31))
+                    x = x.times(player.m.points.pow(2))
+                    if (x < 1) x = new Decimal(1)
+                    return x;
+                },
+                canAfford() {if (player.m.points.gte(getMBuyableCost(15))) {return true}},
+                unlocked() {if (player.m.points.gte(5500) || getBuyableAmount("m", 15) > 0) {return true} else false},
+                buy() {let cost = getMBuyableCost(15)
+                    if (!layers.m.buyables[15].canAfford()) return
+                    player.m.buyables[15] = player.m.buyables[15].plus(1)
+                    if (!hasUpgrade("m", 25)) {player.m.points = player.m.points.minus(cost)}}
+            },
+            31: {
+                display() {
+                let desc = "<b><h2>Watering Cans Autogain(Makes Cans A Normal Cost Layer)</h2></b><br>"    
+                let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 31) + "</b><br>"
+                let eff = "<b><h2>Effect</h2>: " + format(getMBuyableEff(31).times(100)) + "%</b><br>"
+                let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(31)) + " Watering Cans</b><br>"
+                return desc + start + eff + cost},
+                cost(a) {
+                    let ret = getBuyableAmount("m", 31).pow(10).round()
                     if (ret < 1) ret = new Decimal(1)
                     return ret;
                 },
                 effect() {
-                    let x = getBuyableAmount("m", 21).div(100)
-                    x = x.times(player.m.points.times(2))
+                    let x = getBuyableAmount("m", 31).div(100)
+                    if (hasUpgrade("m", 31)) x = x.times(upgradeEffect("m", 31))
+                    x = x.times(player.m.points.pow(2))
                     return x;
         },
-                canAfford() {if (player.c.points.gte(getMBuyableCost(21))) {return true}},
-                unlocked() {if (player.m.points.gte(1)) {return true} else false},
-                buy() {let cost = getMBuyableCost(21)
-                    if (!layers.m.buyables[21].canAfford()) return
-                    player.m.buyables[21] = player.m.buyables[21].plus(1)
+                canAfford() {if (player.c.points.gte(getMBuyableCost(31))) {return true}},
+                unlocked() {if (player.m.points.gte(1) || getBuyableAmount("m", 11) > 0) {return true} else false},
+                buy() {let cost = getMBuyableCost(31)
+                    if (!layers.m.buyables[31].canAfford()) return
+                    player.m.buyables[31] = player.m.buyables[31].plus(1)
                     player.c.points = player.c.points.minus(cost)}
             },
-            22: {
+            32: {
                 display() {
                     let desc = "<b><h2>Magnify CLicker Autogain(Makes Magnifying Glasses A Normal Cost Layer)</h2></b><br>"    
-                    let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 22) + "</b><br>"
-                    let eff = "<b><h2>Effect</h2>: " + format(getMBuyableEff(22).times(100)) + " %</b><br>"
-                    let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(22)) + " Magnifying Glasses</b><br>"
+                    let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 32) + "</b><br>"
+                    let eff = "<b><h2>Effect</h2>: " + format(getMBuyableEff(32).times(100)) + " %</b><br>"
+                    let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(32)) + " Magnifying Glasses</b><br>"
                     return desc + start + eff + cost},
                     cost(a) {
-                        let ret = getBuyableAmount("m", 22).pow(10).round()
+                        let ret = getBuyableAmount("m", 32).pow(10).round()
                         if (ret < 1) ret = new Decimal(1)
                         return ret;
                     },
                     effect() {
-                        let x =  getBuyableAmount("m", 22).div(100)
-                        x = x.times(player.m.points.times(2))
+                        let x =  getBuyableAmount("m", 32).div(100)
+                        if (hasUpgrade("m", 31)) x = x.times(upgradeEffect("m", 31))
+                        x = x.times(player.m.points.pow(2))
                         
                         return x;
             },
+                   
+                    canAfford() {if (player.g.points.gte(getMBuyableCost(32))) {return true}},
+                    unlocked() {if (player.m.points.gte(1) || getBuyableAmount("m", 11) > 0) {return true} else false},
+                    buy() {let cost = getMBuyableCost(32)
+                        if (!layers.m.buyables[32].canAfford()) return
+                        player.m.buyables[32] = player.m.buyables[32].plus(1)
+                        player.g.points = player.g.points.minus(cost)}
+                },
+
+            21: {
+                display() {
+                    let desc = "<b><h2>Watering Can Eff Inc</h2></b><br>"    
+                    let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 21) + "</b><br>"
+                    let eff = "<b><h2>Effect</h2>: " + format(getMBuyableEff(21)) + "X</b><br>"
+                    let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(21)) + " Watering Cans</b><br>"
+                    return desc + start + eff + cost},
+                    cost(a) {
+                        let ret = getBuyableAmount("m", 21).add(1).pow(1.5).round()
+                        return ret;
+                    },
+                    effect() {
+                        let x = getBuyableAmount("m", 21).times(2)
+                        if (hasUpgrade("m", 31)) x = x.times(upgradeEffect("m", 31))
+                        x = x.times(player.m.points.pow(2))
+                        if (x < 1) {x = new Decimal(1)}
+                        return x;
+            },
+                    canAfford() {if (player.c.points.gte(getMBuyableCost(21))) {return true}},
+                    unlocked() {if (player.m.points.gte(1) || getBuyableAmount("m", 11) > 0) {return true} else false},
+                    buy() {let cost = getMBuyableCost(21)
+                        if (!layers.m.buyables[21].canAfford()) return
+                        player.m.buyables[21] = player.m.buyables[21].plus(1)
+                        player.c.points = player.c.points.minus(cost)}
+            },
+            22: {
+                display() {
+                    let desc = "<b><h2>Magnifying Gen Rate Inc</h2></b><br>"    
+                    let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 22) + "</b><br>"
+                    let eff = "<b><h2>Effect</h2>: " + format(getMBuyableEff(22)) + "X</b><br>"
+                    let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(22)) + " Magnifying Glasses</b><br>"
+                    return desc + start + eff + cost},
+                    cost(a) {
+                        let ret = getBuyableAmount("m", 22).add(1).pow(1.5).round()
+                        return ret;
+                    },
+                    effect() {
+                        let x = getBuyableAmount("m", 22).times(2)
+                        if (hasUpgrade("m", 31)) x = x.times(upgradeEffect("m", 31))
+                        x = x.times(player.m.points.pow(2))
+                        if (x < 1) {x = new Decimal(1)}
+                        return x;
+            },
                     canAfford() {if (player.g.points.gte(getMBuyableCost(22))) {return true}},
-                    unlocked() {if (player.m.points.gte(1)) {return true} else false},
+                    unlocked() {if (player.m.points.gte(1) || getBuyableAmount("m", 11) > 0) {return true} else false},
                     buy() {let cost = getMBuyableCost(22)
                         if (!layers.m.buyables[22].canAfford()) return
                         player.m.buyables[22] = player.m.buyables[22].plus(1)
                         player.g.points = player.g.points.minus(cost)}
-                },
-
+            },
+        },
+        upgrades: {
+            rows: 3,
+            cols: 5,
             11: {
-                display() {
-                    let desc = "<b><h2>Watering Can Eff Inc</h2></b><br>"    
-                    let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 11) + "</b><br>"
-                    let eff = "<b><h2>Effect</h2>: " + format(getMBuyableEff(11)) + "X</b><br>"
-                    let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(11)) + " Watering Cans</b><br>"
-                    return desc + start + eff + cost},
-                    cost(a) {
-                        let ret = getBuyableAmount("m", 11).add(1).pow(1.5).round()
-                        return ret;
-                    },
-                    effect() {
-                        let x = getBuyableAmount("m", 11).times(2)
-                        x = x.times(player.m.points.times(2))
-                        if (x < 1) {x = new Decimal(1)}
-                        return x;
-            },
-                    canAfford() {if (player.c.points.gte(getMBuyableCost(11))) {return true}},
-                    unlocked() {if (player.m.points.gte(1)) {return true} else false},
-                    buy() {let cost = getMBuyableCost(11)
-                        if (!layers.m.buyables[11].canAfford()) return
-                        player.m.buyables[11] = player.m.buyables[11].plus(1)
-                        player.c.points = player.c.points.minus(cost)}
-            },
+                title: "Automation v1.0",
+                description: "Automates Factory Buying",
+                cost: new Decimal(50),
+                unlocked( ) {if (getBuyableAmount("m", 11) > 0) return true}
+            },      
             12: {
-                display() {
-                    let desc = "<b><h2>Magnifying Gen Rate Inc</h2></b><br>"    
-                    let start = "<b><h2>Amount</h2>: " + getBuyableAmount("m" , 12) + "</b><br>"
-                    let eff = "<b><h2>Effect</h2>: " + format(getMBuyableEff(12)) + "X</b><br>"
-                    let cost = "<b><h2>Cost</h2>: " + format(getMBuyableCost(12)) + " Magnifying Glasses</b><br>"
-                    return desc + start + eff + cost},
-                    cost(a) {
-                        let ret = getBuyableAmount("m", 12).add(1).pow(1.5)
-                        return ret;
-                    },
-                    effect() {
-                        let x = getBuyableAmount("m", 12).times(2)
-                        x = x.times(player.m.points.times(2))
-                        if (x < 1) {x = new Decimal(1)}
-                        return x;
+                title: "Automation v2.0",
+                description: "Automates Samuel Buying",
+                cost: new Decimal(100),
+                unlocked( ) {if (getBuyableAmount("m", 12) > 0) return true}
+            
+            },       
+            13: {
+                title: "Automation v3.0",
+                description: "Automates Ape Buying",
+                cost: new Decimal(2000),
+                unlocked( ) {if (getBuyableAmount("m", 13) > 0) return true}
+            
             },
-                    canAfford() {if (player.g.points.gte(getMBuyableCost(12))) {return true}},
-                    unlocked() {if (player.m.points.gte(1)) {return true} else false},
-                    buy() {let cost = getMBuyableCost(12)
-                        if (!layers.m.buyables[12].canAfford()) return
-                        player.m.buyables[12] = player.m.buyables[12].plus(1)
-                        player.g.points = player.g.points.minus(cost)}
+            14: {
+                title: "Automation v4.0",
+                description: "Automates God Buying",
+                cost: new Decimal(3000),
+                unlocked( ) {if (getBuyableAmount("m", 14) > 0) return true}
             },
-        }
-        }
+            15: {
+                title: "Automation v5.0",
+                description: "Automates Potato Man Buying",
+                cost: new Decimal(8500),
+                unlocked( ) {if (getBuyableAmount("m", 15) > 0) return true}
+            },
+            21: {
+                title: "Cult v1.0",
+                description: "The More Samuels Bought The Faster They Produce Factories",
+                cost: new Decimal(50),
+                unlocked( ) {if (getBuyableAmount("m", 11) > 0) return true},
+                effect() {
+                    if (getBuyableAmount("m", 12) > 0){
+                    let ret = getBuyableAmount("m", 12).div(100).add(1)
+                    if (ret.gte("1e20000000")) ret = ret.sqrt().times("1e10000000")
+                    return ret;
+            }}
+            },      
+            22: {
+                title: "Cult v2.0",
+                description: "The More Apes Bought The Faster They Produce Samuels",
+                cost: new Decimal(100),
+                unlocked( ) {if (getBuyableAmount("m", 13) > 0) return true},
+                effect() {
+                    if (getBuyableAmount("m", 13) > 0){
+                    let ret = getBuyableAmount("m", 13).div(50).add(1)
+                    if (ret.gte("1e20000000")) ret = ret.sqrt().times("1e10000000")
+                    return ret;
+            }}
+            },       
+            23: {
+                title: "Cult v3.0",
+                description: "The More Gods Bought The Faster They Produce Apes",
+                cost: new Decimal(250),
+                unlocked( ) {if (getBuyableAmount("m", 14) > 0) return true},
+                effect() {
+                    if (getBuyableAmount("m", 14) > 0){
+                    let ret = getBuyableAmount("m", 14).div(25).add(1)
+                    if (ret.gte("1e20000000")) ret = ret.sqrt().times("1e10000000")
+                    return ret;
+            }}
+            },
+            24: {
+                title: "Cult v4.0",
+                description: "The More Potato Mans Bought The Faster They Produce Gods",
+                cost: new Decimal(250),
+                unlocked( ) {if (getBuyableAmount("m", 15) > 0) return true},
+                effect() {
+                    if (getBuyableAmount("m", 15) > 0){
+                    let ret = getBuyableAmount("m", 15).div(10).add(1)
+                    if (ret.gte("1e20000000")) ret = ret.sqrt().times("1e10000000")
+                    return ret;
+            }}
+            },
+            25: {
+                title: "Annoying",
+                description: "No Producers Cost Metal",
+                cost: new Decimal(8500),
+                unlocked( ) {if (hasUpgrade("m", 15)) return true},
+                
+            },
+            31: {
+                title: "Ultimate CULT",
+                description: "Factories Bought Increase All Buyables",
+                cost: new Decimal(10000),
+                unlocked( ) {if (hasUpgrade("m", 24)) return true},
+                effect() {
+                    if (getBuyableAmount("m", 11) > 0){
+                    let ret = getBuyableAmount("m", 11).div(10).add(1)
+                    if (ret.gte("1e20000000")) ret = ret.sqrt().times("1e10000000")
+                    return ret;
+            }}
+            },
+                
+            
+        },
+    
+    }
 
 
         

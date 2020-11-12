@@ -11,8 +11,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "1.1",
-	name: "Idk Bro Coolerest Trees Go brrrr",
+	num: "1.11",
+	name: "Idk Bro Cooleresterere Trees Go brrrr",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -35,12 +35,12 @@ function getPointGen() {
 
 	let gain = new Decimal(1)
 	let base = new Decimal(1)
-	if (player.c.points > 0 &&! (getBuyableAmount("m", 21) > 0)) {base = base.add(1).pow(player.c.points.pow(.8))}
-	else if (getBuyableAmount("m", 21) > 0 && player.c.points > 0) {base = base.add(1).pow((new Decimal(17).sub((new Decimal(17).sub(new Decimal(2))).div((player.c.points.log(2)).add(1)))))}
+	if (player.c.points > 0 &&! (getBuyableAmount("m", 31) > 0)) {base = base.add(1).pow(player.c.points.pow(.8))}
+	else if (getBuyableAmount("m", 31) > 0 && player.c.points > 0) {base = new Decimal(2).pow((new Decimal(22).sub((new Decimal(22).sub(new Decimal(2))).div((player.c.points.log(2)).add(1))))).times(upgradeEffect("c", 11)).times(getMBuyableEff(21))}
 	if (hasUpgrade("c", 11)) {base = base.times(upgradeEffect("c", 11))}
 	if (hasMilestone("c", 2)) {base = base.times(player.c.WaterMultiplier.pow(.2))}
-	if (player.m.points.gte(1)) {base = base.times(getMBuyableEff(11))}
-	if (player.m.points > 0) base = base.times(new Decimal(2).times(player.m.points))
+	if (player.m.points.gte(1) && player.c.points > 0) {base = base.times(getMBuyableEff(21))}
+	if (player.m.points > 0) base = base.times((player.m.points.times(player.m.points).add(1)))
 	gain = base
 	if (hasUpgrade("p", 11)) gain = gain.times(upgradeEffect("p", 11))
 	if (hasUpgrade("p", 13)) gain = gain.times(upgradeEffect("p", 13))
@@ -61,7 +61,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e280000000"))
+	return player.points.gte(new Decimal("e500"))
 }
 
 

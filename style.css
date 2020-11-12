@@ -232,6 +232,7 @@ h1, h2, h3, b, input {
 	border: 2px solid;
 	border-color: rgba(0, 0, 0, 0.125);
 	font-size: 10px;
+	background-size: cover;
 }
 
 .upgBig {
