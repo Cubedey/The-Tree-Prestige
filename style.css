@@ -76,7 +76,13 @@ h1, h2, h3, b, input {
 	font-family: "Lucida Console", "Courier New", monospace;
 	text-shadow: var(--hqProperty3);
 }
-
+.educationbox {
+	background-color: transparent;
+	width: 300px;
+	border: 15px solid rgb(0, 0, 0);
+	padding: 50px;
+	margin: 20px;
+}
 .smallNode {
 	height: 60px;
 	width: 60px;

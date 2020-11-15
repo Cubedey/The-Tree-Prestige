@@ -85,6 +85,7 @@ function startPlayerBase() {
 		hideChallenges: false,
 		points: modInfo.initialStartPoints,
 		subtabs: {},
+		educationon: false,
 	}
 }
 
@@ -647,3 +648,4 @@ function isFunction(obj) {
   };
   
 document.title = modInfo.name
+

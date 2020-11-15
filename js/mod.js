@@ -11,8 +11,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "1.11",
-	name: "Idk Bro Cooleresterere Trees Go brrrr",
+	num: "1.1111",
+	name: "Idk Bro Cooleresterererererestereere Trees Go brrrr",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -57,11 +57,35 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
+	
+		"<br/>",
+		() => player.p.points < 0 ? "<br/>" :
+			  player.p.points <  15?          `Your Tree Is the Size of ${format(player.p.points.div(1.7))} Human Beans` :
+			  player.p.points <  8.6 * 1000?        `Your Tree Is the Size of ${format(player.p.points.div(15))} Oak Trees` :
+			  player.p.points <  2.3 * 1000 * 1000?    `Your Tree Is the Size of ${format(player.p.points.div(8600))} Large Hadron Colliders` :
+			  player.p.points <  12.7 * 1000 * 1000? `Your Tree Is the Size of ${format(player.p.points.div(2300 * 1000))} Plutos` :
+			  player.p.points <  64 * 1000 * 1000?    `Your Tree Is the Size of ${format(player.p.points.div(12.7 * 1000 * 1000))} Earfs` :
+			  player.p.points <  1.4 * 1000 * 1000 * 1000? `Your Tree Is the Size of ${format(player.p.points.div(64 * 1000 * 1000))} MineCraft Worlds` :
+			  player.p.points <  10 * 1000 * 1000 * 1000?    `Your Tree Is the Size of ${format(player.p.points.div(1.4 * 1000 * 1000 * 1000))} Suns` :
+			  player.p.points <  134 * 1000 * 1000 * 1000  ? `Your Tree Is the Size of ${format(player.p.points.div(10 * 1000 * 1000 * 1000))} Now Say We Stacked All the Humans On Top of Eachother` :
+			  player.p.points <  1.5 * 10**13?    `Your Tree Is the Size of ${format(player.p.points.div(134 * 1000 * 1000 * 1000))} Largest Suns in the Universe` :
+			  player.p.points <  9.46 * 10**15 ? `Your Tree Is the Size of ${format(player.p.points.div("1.5e13"))} Solar Systems` :
+			  player.p.points <  5 * 10**20 ?    `Your Tree Is the Size of ${format(player.p.points.div("9.46e15"))} Lightyears` :
+			  player.p.points <  1.21 * 10**21 ? `Your Tree Is the Size of ${format(player.p.points.div("5e20"))} Sombrero Galaxies` :
+			  player.p.points <  10**23 ? `Your Tree Is the Size of ${format(player.p.points.div("1.2e21"))} Milky Way Galaxies` :
+			  player.p.points <  4.4 * 10**26 ? `Your Tree Is the Size of ${format(player.p.points.div("e23"))} Local Groups` :
+			  player.p.points <  10**100 ? `Your Tree Is the Size of ${format(player.p.points.div("4.4e26"))} Universes` :
+			  player.p.points <  10**308 ?  `Your Tree Is the Size of ${format(player.p.points.div("e100"))} Multiverses` :
+			  new Decimal(10).pow(716).gte(player.p.points) ? `Your Tree Is the Size of ${format(player.p.points.div("e308"))} Omniverses` :
+			   `Your Tree Is the Size of ${format(player.p.points.div("e716"))} Omegaverses`,
+			  //new Decimal(24 * 365).times("3e1000").gte(player.p.points) ? `Your Tree Is the Size of ${format(player.p.points.div(24 * 365 * 1000000000))} eons of work` :
+											//		  `Your Tree Is the Size of heat death ^${format(player.points.log(new Decimal(24).mul(365).mul("1e1000")))} of work`
+		"<br> (Based On Branches) </br>"
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e500"))
+	return player.p.points.gte(new Decimal("e750"))
 }
 
 

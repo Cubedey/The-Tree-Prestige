@@ -8,7 +8,8 @@ addLayer("p", {
         name: "Branches", // This is optional, only used in a few places, If absent it just uses the layer id.
         symbol: "",
          // This appears on the layer's node. Default is the id with the first letter capitalized
-        position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+        
+         position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
         startData() { return {
             unlocked: true,
             points: new Decimal(0),
@@ -71,7 +72,7 @@ addLayer("p", {
                 title: "Some Branches Nose-Dive Into The Ground",
                 description: "Gain double the amount of branches you have in water",
                 cost: new Decimal(1),
-                
+                style: {'link' : "https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_str_style"},
                 effect() {
                     let ret = player[this.layer].points.multiply(2)
                     if (hasUpgrade("p", 1)) ret = ret.times(2)
@@ -637,7 +638,7 @@ addLayer("m", {
             display() {return "Swap Between Autobuying Factories on And Off:" + player.m.autobuyon},
             canClick() {return true},
             onClick() {player.m.autobuyon = !player.m.autobuyon},
-            unlocked() {return hasMilestone("c", 1)}
+            unlocked() {return hasMilestone("m", 2)}
         },},
         buyables: {
             rows: 3,
@@ -981,7 +982,7 @@ addLayer("m", {
                 title: "Annoying",
                 description: "No Producers Cost Metal",
                 cost: new Decimal(8500),
-                unlocked( ) {if (hasUpgrade("m", 15)) return true},
+                unlocked( ) {if (hasUpgrade("m", 24)) return true},
                 
             },
             31: {
@@ -1005,3 +1006,101 @@ addLayer("m", {
 
         
     )        
+addLayer("i", {
+        layer: " ", 
+        name: "Info", // This layer is linked on the side and provides guidance.
+        startData() { return {
+            unlocked: true,
+           
+        }},
+        nodeStyle() {
+            {return {'color' : 'transparent','border-color': '#be7757','background-image': 'url(https://images.ctfassets.net/cnu0m8re1exe/4KwrJVfCGeyOKwm8PS2tjI/30026753d97e3b41a50560063126ded8/shutterstock_135114548.jpg?w=650&h=433&fit=fill)', 'background-repeat':'no-repeat','background-size':'cover','background-position':'-10px 0px'
+        }}}, 
+        color:() => "#be7757",
+        type: "none", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+        row: "side", // Row the layer is in on the tree (0 is the first row)
+        layerShown() {return true}, // Condition for when layer appears on the tree
+        hotkeys: [
+            {key: "h", description: "H: open Help menu", onPress(){player.tab = "h"}},
+        ],
+        tooltip() { // Optional, tooltip displays when the layer is unlocked
+            let tooltip = "Info"
+            return tooltip
+        },
+        shouldNotify() {},
+tabFormat: {
+    "Game Info": {
+        content: [
+            ["display-text", "<h2>Scientific Explanations</h2>\n\
+            <p>These Are Explanations of Almost Every Aspect of This Game and What They Represent or How They Work. Each One Leads to a Link Further Explaining the Topic if You Would Like to Explore.</p>"],
+            ["display-text", "<br><br><h3>Tree Branches</h3><br>\n\
+            <p>Prestige Button:<a href='https://en.wikipedia.org/wiki/Branch'> A branch (UK: /ˈbrɑːntʃ/ or UK: /ˈbræntʃ/, US: /ˈbræntʃ/) or tree branch (sometimes referred to in botany as a ramus) is a woody structural member connected to but not part of the central trunk of a tree (or sometimes a shrub). Large branches are known as boughs and small branches are known as twigs. The term 'twig' often refers to a terminus, while 'bough' refers only to branches coming directly from the trunk.</a></p><br>\n\
+            <p>11:<a href='https://en.wikipedia.org/wiki/Transpiration_stream#:~:text=1%2DWater%20is%20passively%20transported,by%20diffusion%20through%20the%20stomata.'> In plants, the transpiration stream is the uninterrupted stream of water and solutes which is taken up by the roots and transported via the xylem to the leaves where it evaporates into the air/apoplast-interface of the substomatal cavity. It is driven by capillary action and in some plants by root pressure. The main driving factor is the difference in water potential between the soil and the substomatal cavity caused by transpiration.</a></p><br>\n\
+            <p>12:<a href='https://en.wikipedia.org/wiki/Tree'> In botany, a tree is a perennial plant with an elongated stem, or trunk, supporting branches and leaves in most species. In some usages, the definition of a tree may be narrower, including only woody plants with secondary growth, plants that are usable as lumber or plants above a specified height. In wider definitions, the taller palms, tree ferns, bananas, and bamboos are also trees. Trees are not a taxonomic group but include a variety of plant species that have independently evolved a trunk and branches as a way to tower above other plants to compete for sunlight. Trees tend to be long-lived, some reaching several thousand years old. Trees have been in existence for 370 million years. It is estimated that there are some three trillion mature trees in the world.</a></p><br>\n\
+            <p>13:<a href='https://www.coursera.org/lecture/microeconomics-part2/4-1-3-negative-externalities-implications-for-efficiency-8LZFj'> Perfect markets achieve efficiency: maximizing total surplus generated. But real markets are imperfect. In this course we will explore a set of market imperfections to understand why they fail and to explore possible remedies including as antitrust policy, regulation, government intervention. Examples are taken from everyday life, from goods and services that we all purchase and use.</a></p><br>\n\
+            <p>14:<a href='https://en.wikipedia.org/wiki/Cohesion_(chemistry)'> Cohesion (from Latin cohaesiō 'cling' or 'unity') or cohesive attraction or cohesive force is the action or property of like molecules sticking together, being mutually attractive. It is an intrinsic property of a substance that is caused by the shape and structure of its molecules, which makes the distribution of surrounding electrons irregular when molecules get close to one another, creating electrical attraction that can maintain a microscopic structure such as a water drop. In other words, cohesion allows for surface tension, creating a 'solid-like' state upon which light-weight or low-density materials can be placed.</a></p><br>\n\
+            <p>22:<a href='https://en.wikipedia.org/wiki/Manual_labour'> Manual work is physical work done by humans, in contrast to labour by machines and working animals. It is most literally work done with the hands (the word 'manual' comes from the Latin word for hand) and, by figurative extension, it is work done with any of the muscles and bones of the body. For most of human prehistory and history, manual labour and its close cousin, animal labour, have been the primary ways that physical work has been accomplished. Mechanisation and automation, which reduce the need for human and animal labour in production, have existed for centuries, but it was only starting in the 18th and 19th centuries that they began to significantly expand and to change human culture. To be implemented, they require that sufficient technology exist and that its capital costs be justified by the amount of future wages that they will obviate. Semi-automation is an alternative to worker displacement that combines human labour, automation, and computerization to leverage the advantages of both man and machine.</a></p><br>\n\
+            <p></p><br><br><br>\n\
+            "],
+            ["display-text", "<br><br><h3>Watering Cans</h3><br>\n\
+            <p>Prestige Button:<a href='https://en.wikipedia.org/wiki/Woodworking'> Along with stone, clay and animal parts, wood was one of the first materials worked by early humans. Microwear analysis of the Mousterian stone tools used by the Neanderthals show that many were used to work wood. The development of civilization was closely tied to the development of increasingly greater degrees of skill in working these materials.</a></p><br>\n\
+            <p>11:<a href='https://en.wikipedia.org/wiki/Watering_can'> A watering can (or watering pot) is a portable container, usually with a handle and a funnel, used to water plants by hand. It has been in use since at least 79 A.D. and has since seen many improvements in design. Apart from watering plants, it has varied uses, as it is a fairly versatile tool.</a></p><br>\n\
+            <p>12:<a href='https://en.wikipedia.org/wiki/Supply_and_demand'> In microeconomics, supply and demand is an economic model of price determination in a market. It postulates that, holding all else equal, in a competitive market, the unit price for a particular good, or other traded item such as labor or liquid financial assets, will vary until it settles at a point where the quantity demanded (at the current price) will equal the quantity supplied (at the current price), resulting in an economic equilibrium for price and quantity transacted.</a></p><br>\n\
+            <p></p><br><br><br>\n\
+            "],
+            ["display-text", "<br><br><h3>Magnifying Glasses</h3><br>\n\
+            <p>Prestige Button:<a href='https://en.wikipedia.org/wiki/Logging'> Logging is the process of cutting, processing, and moving trees to a location for transport. It may include skidding, on-site processing, and loading of trees or logs onto trucks or skeleton cars.Logging is the beginning of a supply chain that provides raw material for many products societies worldwide use for housing, construction, energy, and consumer paper products. Logging systems are also used to manage forests, reduce the risk of wildfires, and restore ecosystem functions.</a></p><br>\n\
+            <p>11:<a href='https://en.wikipedia.org/wiki/Magnifying_glass'> A magnifying glass (called a hand lens in laboratory contexts) is a convex lens that is used to produce a magnified image of an object. The lens is usually mounted in a frame with a handle. A magnifying glass can be used to focus light, such as to concentrate the sun's radiation to create a hot spot at the focus for fire starting.</a></p><br>\n\
+            <p>12:<a href='https://en.wikipedia.org/wiki/Microeconomics'> Microeconomics (from Greek prefix mikro- meaning 'small' + economics) is a branch of economics that studies the behavior of individuals and firms in making decisions regarding the allocation of scarce resources and the interactions among these individuals and firms. One goal of microeconomics is to analyze the market mechanisms that establish relative prices among goods and services and allocate limited resources among alternative uses. Microeconomics shows conditions under which free markets lead to desirable allocations. It also analyzes market failure, where markets fail to produce efficient results.While microeconomics focuses on firms and individuals, macroeconomics focuses on the sum total of economic activity, dealing with the issues of growth, inflation, and unemployment and with national policies relating to these issues. Microeconomics also deals with the effects of economic policies (such as changing taxation levels) on microeconomic behavior and thus on the aforementioned aspects of the economy. Particularly in the wake of the Lucas critique, much of modern macroeconomic theories has been built upon microfoundations—i.e. based upon basic assumptions about micro-level behavior.</a></p><br>\n\
+            <p></p><br><br><br>\n\
+            "],
+            ["display-text", "<br><br><h3>Metal</h3><br>\n\
+            <p>Prestige Button:<a href='https://en.wikipedia.org/wiki/Innovation'> Innovation is commonly defined as the 'carrying out of new combinations' that include 'the introduction of new goods, ... new methods of production, ... the opening of new markets, ... the conquest of new sources of supply ... and the carrying out of a new organization of any industry' However, many scholars and governmental organizations has given their own definition of the concept. Some common element in the different definitions is a focus on newness, improvement and spread. It is also often viewed as taking place through the provision of more-effective products, processes, services, technologies, art works or business models that innovators make available to markets, governments and society. An innovation is something original and more effective and, as a consequence, new, that 'breaks into' the market or society. Innovation is related to, but not the same as, invention: innovation is more apt to involve the practical implementation of an invention (i.e. new / improved ability) to make a meaningful impact in a market or society, and not all innovations require a new invention. Technical Innovation often[quantify] manifests itself via the engineering process when the problem being solved is of a technical or scientific nature. The opposite of innovation is exnovation.</a></p><br>\n\
+            <p>11-15:<a href='https://en.wikipedia.org/wiki/Automation'> Automation is the technology by which a process or procedure is performed with minimal human assistance. Automation, or automatic control, is the use of various control systems for operating equipment such as machinery, processes in factories, boilers, and heat-treating ovens, switching on telephone networks, steering, and stabilization of ships, aircraft, and other applications and vehicles with minimal or reduced human intervention.</a></p><br>\n\
+            <p>21-24:<a href='https://en.wikipedia.org/wiki/Cult'> In modern English, a cult is a social group that is defined by its unusual religious, spiritual, or philosophical beliefs, or by its common interest in a particular personality, object or goal. This sense of the term is controversial, having divergent definitions both in popular culture and academia, and has also been an ongoing source of contention among scholars across several fields of study.:348–56 It is usually considered pejorative.</a></p><br>\n\
+            <p>25:<a href='https://en.wikipedia.org/wiki/Annoyance'> Annoyance is an unpleasant mental state that is characterized by irritation and distraction from one's conscious thinking. It can lead to emotions such as frustration and anger. The property of being easily annoyed is called irritability.</a></p><br>\n\
+            <p>31:<a href='https://en.wikipedia.org/wiki/Religion'> Religion is a social-cultural system of designated behaviors and practices, morals, worldviews, texts, sanctified places, prophecies, ethics, or organizations, that relates humanity to supernatural, transcendental, or spiritual elements. However, there is no scholarly consensus over what precisely constitutes a religion.</a></p><br>\n\
+            <p>Factories:<a href='https://en.wikipedia.org/wiki/Factory_system'> The factory system is a method of manufacturing using machinery and division of labour. Because of the high capital cost of machinery and factory buildings, factories were typically privately owned by wealthy individuals who employed the operative labour. Use of machinery with the division of labour reduced the required skill level of workers and also increased the output per worker.The factory system was first adopted in Britain at the beginning of the Industrial Revolution in the late eighteenth century and later spread around the world. It replaced the putting-out system (domestic system). The main characteristic of the factory system is the use of machinery, originally powered by water or steam and later by electricity. Other characteristics of the system mostly derive from the use of machinery or economies of scale, the centralization of factories, and standardization of interchangeable parts.</a></p><br>\n\
+            <p>Samuel Slater:<a href='https://en.wikipedia.org/wiki/Samuel_Slater'> Samuel Slater (June 9, 1768 – April 21, 1835) was an early English-American industrialist known as the 'Father of the American Industrial Revolution' (a phrase coined by Andrew Jackson) and the 'Father of the American Factory System'. In the UK, he was called 'Slater the Traitor' because he brought British textile technology to America, modifying it for United States use. He stole the designs of textile factory machinery as an apprentice to a pioneer in the British industry before migrating to the United States at the age of 21. He designed the first textile mills in the US and later went into business for himself, developing a family business with his sons. He eventually owned thirteen spinning mills and had developed tenant farms and company towns around his textile mills, such as Slatersville, Rhode Island.</a></p><br>\n\
+            <p>Apes:<a href='https://en.wikipedia.org/wiki/Human_evolution'> Human evolution is the evolutionary process that led to the emergence of anatomically modern humans, beginning with the evolutionary history of primates—in particular genus Homo—and leading to the emergence of Homo sapiens as a distinct species of the hominid family, which includes the great apes. This process involved the gradual development of traits such as human bipedalism and language, as well as interbreeding with other hominins, which indicate that human evolution was not linear but a web.</a></p><br>\n\
+            <p>Gods:<a href='https://en.wikipedia.org/wiki/Deity'> A deity or god is a supernatural being considered divine or sacred. The Oxford Dictionary of English defines deity as 'a god or goddess (in a polytheistic religion)'', or anything revered as divine. C. Scott Littleton defines a deity as 'a being with powers greater than those of ordinary humans, but who interacts with humans, positively or negatively, in ways that carry humans to new levels of consciousness, beyond the grounded preoccupations of ordinary life'. A goddess is a female deity.</a></p><br>\n\
+            <p>Potato Man:<a href='https://www.ebay.com/p/1975962941'> Mr. Potato Head is ABOVE ALL!</a></p><br>\n\
+            <p>Efficency Buyables:<a href='https://en.wikipedia.org/wiki/Technological_singularity'> The technological singularity—also, simply, the singularity—is a hypothetical point in time at which technological growth becomes uncontrollable and irreversible, resulting in unforeseeable changes to human civilization. According to the most popular version of the singularity hypothesis, called intelligence explosion, an upgradable intelligent agent will eventually enter a 'runaway reaction' of self-improvement cycles, each new and more intelligent generation appearing more and more rapidly, causing an 'explosion' in intelligence and resulting in a powerful superintelligence that qualitatively far surpasses all human intelligence.</a></p><br>\n\
+            <p>Automatic Gain Buyables:<a href='https://en.wikipedia.org/wiki/Materialism'> Materialism is a form of philosophical monism that holds that matter is the fundamental substance in nature, and that all things, including mental states and consciousness, are results of material interactions. According to philosophical materialism, mind and consciousness are by-products or epiphenomena of material processes (such as the biochemistry of the human brain and nervous system), without which they cannot exist. This concept directly contrasts with idealism, where mind and consciousness are first-order realities to which matter is subject and material interactions are secondary.</a></p><br>\n\
+            <p></p><br><br><br>\n\
+            "],
+        ],
+    },
+    "Tree Size": {
+        content: [
+            
+            ["display-text", "<h2>Universal Objects</h2>\n\
+            <p>These Are Definitions of the Objects Your Tree Has Surpased in Size.</p>"],
+           /* player.p.points < 0 ? "<br/>" :
+			  player.p.points <  15?          `Your Tree Is the Size of ${format(player.p.points.div(1.7))} Human Beans` :
+			  player.p.points <  8.6 * 1000?        `Your Tree Is the Size of ${format(player.p.points.div(15))} Oak Trees` :
+			  player.p.points <  2.3 * 1000 * 1000?    `Your Tree Is the Size of ${format(player.p.points.div(8600))} Large Hadron Colliders` :
+			  player.p.points <  12.7 * 1000 * 1000? `Your Tree Is the Size of ${format(player.p.points.div(2300 * 1000))} Plutos` :
+			  player.p.points <  64 * 1000 * 1000?    `Your Tree Is the Size of ${format(player.p.points.div(12.7 * 1000 * 1000))} Earfs` :
+			  player.p.points <  1.4 * 1000 * 1000 * 1000? `Your Tree Is the Size of ${format(player.p.points.div(64 * 1000 * 1000))} MineCraft Worlds` :
+			  player.p.points <  10 * 1000 * 1000 * 1000?    `Your Tree Is the Size of ${format(player.p.points.div(1.4 * 1000 * 1000 * 1000))} Suns` :
+			  player.p.points <  134 * 1000 * 1000 * 1000  ? `Your Tree Is the Size of ${format(player.p.points.div(10 * 1000 * 1000 * 1000))} Now Say We Stacked All the Humans On Top of Eachother` :
+			  player.p.points <  1.5 * 10**13?    `Your Tree Is the Size of ${format(player.p.points.div(134 * 1000 * 1000 * 1000))} Largest Suns in the Universe` :
+			  player.p.points <  9.46 * 10**15 ? `Your Tree Is the Size of ${format(player.p.points.div("1.5e13"))} Solar Systems` :
+			  player.p.points <  5 * 10**20 ?    `Your Tree Is the Size of ${format(player.p.points.div("9.46e15"))} Lightyears` :
+			  player.p.points <  1.21 * 10**21 ? `Your Tree Is the Size of ${format(player.p.points.div("5e20"))} Sombrero Galaxies` :
+			  player.p.points <  10**23 ? `Your Tree Is the Size of ${format(player.p.points.div("1.2e21"))} Milky Way Galaxies` :
+			  player.p.points <  4.4 * 10**26 ? `Your Tree Is the Size of ${format(player.p.points.div("e23"))} Local Groups` :
+			  player.p.points <  10**100 ? `Your Tree Is the Size of ${format(player.p.points.div("4.4e26"))} Universes` :
+			  player.p.points <  10**308 ?  `Your Tree Is the Size of ${format(player.p.points.div("e100"))} Multiverses` :
+			  new Decimal(10).pow(716).gte(player.p.points) ? `Your Tree Is the Size of ${format(player.p.points.div("e308"))} Omniverses` :
+			   `Your Tree Is the Size of ${format(player.p.points.div("e716"))} Omegaverses`, */
+        ],
+    },
+
+
+    }
+}
+
+)
+    
