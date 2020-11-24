@@ -110,6 +110,14 @@ function updateLayers(){
                 
             }  
         }
+        if (layers[layer].infoboxes){
+            for (thing in layers[layer].infoboxes){
+                layers[layer].infoboxes[thing].id = thing
+                layers[layer].infoboxes[thing].layer = layer
+                if (layers[layer].infoboxes[thing].unlocked === undefined)
+                    layers[layer].infoboxes[thing].unlocked = true
+            }  
+        }
 
         if(!layers[layer].componentStyles) layers[layer].componentStyles = {}
         if(layers[layer].symbol === undefined) layers[layer].symbol = layer.charAt(0).toUpperCase() + layer.slice(1)

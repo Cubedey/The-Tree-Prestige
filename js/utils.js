@@ -62,6 +62,7 @@ function toPlaces(x, precision, maxAccepted) {
 	}
 	return result
 }
+
 // ************ Save stuff ************
 
 function save() {
@@ -97,6 +98,7 @@ function getStartPlayer() {
 		for (thing in extradata)
 			playerdata[thing] = extradata[thing]
 	}
+	playerdata.infoboxes = {}
 	for (layer in layers){
 		playerdata[layer] = layers[layer].startData()
 		playerdata[layer].buyables = getStartBuyables(layer)
@@ -114,6 +116,11 @@ function getStartPlayer() {
 			if (playerdata.subtabs[layer] == undefined) playerdata.subtabs[layer] = {}
 			for (item in layers[layer].microtabs)
 			playerdata.subtabs[layer][item] = Object.keys(layers[layer].microtabs[item])[0]
+		}
+		if (layers[layer].infoboxes) {
+			if (playerdata.infoboxes[layer] == undefined) playerdata.infoboxes[layer] = {}
+			for (item in layers[layer].infoboxes)
+				playerdata.infoboxes[layer][item] = false
 		}
 	}
 	return playerdata

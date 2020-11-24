@@ -49,7 +49,7 @@
 			<br>
 			<h3>{{VERSION.withName}}</h3>
 			<br>
-			Added A metal Layer and balanced a lot of things.
+			Added a lot of asthetic related things and created a story.
 			<br>
 			<br>
 			
@@ -156,6 +156,7 @@
 			<div v-if="player.tab==layer" v-bind:class="'col right fast tab'"  v-bind:style="[tmp[layer].style ? tmp[layer].style : {}, (layers[layer].tabFormat && !Array.isArray(tmp[layer].tabFormat)) ? tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style : {}]">
 				<button class="back" onclick="showTab('tree')">←</button><br><br><br>
 				<div v-if="!layers[layer].tabFormat">
+					<info-box v-if="tmp[layer].infoboxes" :layer="layer" :data="Object.keys(tmp[layer].infoboxes)[0]"></info-box>
 					<main-display v-bind:style="tmp[layer].componentStyles['main-display']" :layer="layer"></main-display>
 					<div v-if="tmp[layer].type !== 'none'">
 						<prestige-button v-bind:style="tmp[layer].componentStyles['prestige-button']" :layer="layer"></prestige-button>

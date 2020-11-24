@@ -1,5 +1,5 @@
 let modInfo = {
-	name: "The Tree",
+	name: "The Tree Prestige",
 	id: "MYTrees",
 	pointsName: "Water",
 	discordName: "",
@@ -11,8 +11,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "1.1111",
-	name: "Idk Bro Cooleresterererererestereere Trees Go brrrr",
+	num: "1.11111",
+	name: "Idk Bro Cooleresterererererestereereestttttttttttttttttttttttttttttttt Trees Go brrrr",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -67,7 +67,8 @@ var displayThings = [
 			  player.p.points <  64 * 1000 * 1000?    `Your Tree Is the Size of ${format(player.p.points.div(12.7 * 1000 * 1000))} Earfs` :
 			  player.p.points <  1.4 * 1000 * 1000 * 1000? `Your Tree Is the Size of ${format(player.p.points.div(64 * 1000 * 1000))} MineCraft Worlds` :
 			  player.p.points <  10 * 1000 * 1000 * 1000?    `Your Tree Is the Size of ${format(player.p.points.div(1.4 * 1000 * 1000 * 1000))} Suns` :
-			  player.p.points <  134 * 1000 * 1000 * 1000  ? `Your Tree Is the Size of ${format(player.p.points.div(10 * 1000 * 1000 * 1000))} Now Say We Stacked All the Humans On Top of Eachother` :
+			  player.p.points <  134 * 1000 * 1000 * 1000  ? `Your Tree Is the Size of ${format(player.p.points.div(10 * 1000 * 1000 * 1000))}<br>
+			  Now Say We Stacked All the Humans On Top of Eachother` :
 			  player.p.points <  1.5 * 10**13?    `Your Tree Is the Size of ${format(player.p.points.div(134 * 1000 * 1000 * 1000))} Largest Suns in the Universe` :
 			  player.p.points <  9.46 * 10**15 ? `Your Tree Is the Size of ${format(player.p.points.div("1.5e13"))} Solar Systems` :
 			  player.p.points <  5 * 10**20 ?    `Your Tree Is the Size of ${format(player.p.points.div("9.46e15"))} Lightyears` :
@@ -80,7 +81,7 @@ var displayThings = [
 			   `Your Tree Is the Size of ${format(player.p.points.div("e716"))} Omegaverses`,
 			  //new Decimal(24 * 365).times("3e1000").gte(player.p.points) ? `Your Tree Is the Size of ${format(player.p.points.div(24 * 365 * 1000000000))} eons of work` :
 											//		  `Your Tree Is the Size of heat death ^${format(player.points.log(new Decimal(24).mul(365).mul("1e1000")))} of work`
-		"<br> (Based On Branches) </br>"
+		" (Based On Branches) "
 ]
 
 // Determines when the game "ends"
