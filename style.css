@@ -631,3 +631,109 @@ button > * {
     border-top-left-radius: 0;
     margin-bottom: -2px;
 }
+.m:not(.locked).bought {
+	background:url(https://www.transparenttextures.com/patterns/black-paper.png), #7b9095
+}
+.m:not(.locked):not(.bought) {
+	background: #7b9095
+}
+.o:not(.locked):not(.bought) {
+    background: linear-gradient( #4fdcff, #00cafc, #0089ab);
+	background-size: 100% 50%;
+
+	animation: compact 10s linear infinite;}
+.o:not(.locked).bought {
+		background: linear-gradient( #2e8196, #003c4b, #002b36);
+		background-size: 100% 50%;
+		animation: compact 10s linear infinite;}
+.s:not(.locked).bought:not(.treeNode) {
+	background: radial-gradient( #f5bd1f, #e0f51f 25%, #f57f1f 25%);
+	background-position: center;
+	animation: sun 1s reverse infinite;
+}
+.s:not(.locked):not(.bought):not(.treeNode) {
+	background: radial-gradient( #3b2e08, #21240a 25%, #502a0a 25%);
+	background-position: center;
+	animation: sun 1s reverse infinite;
+}
+@keyframes sun {
+	0% {
+		background-size: 100% 100%;
+		
+	}
+	50% {
+		background-size: 250% 250%;
+		}
+		100% {
+			background-size: 100% 100%;
+			
+		}
+}
+@keyframes superdense {
+	0% {
+		background-size: 100% 100%;
+		
+	}
+	50% {
+		background-size: 1000% 1000%;
+		width: 10%;
+	}
+	100% {
+		background-size: 100% 100%;
+	}
+}
+@keyframes compact {
+	0% {
+		background-position: 0% 0%;
+	}
+	100% {
+		background-position: 0% 400%;
+	}
+}
+@keyframes mind {
+	0% {
+		background:  #FFD300;
+		
+		
+	}
+	100% {
+		background: url(https://i.pinimg.com/474x/b3/f4/48/b3f44801750d96a662aa20097ee62643.jpg);
+    
+	}
+}
+@keyframes lighten {
+	0% {
+		opacity: 100%
+		
+	}
+	100% {
+		opacity: 0% 
+	}
+}
+@keyframes power {
+	0% {
+		border-width: 3px;
+		
+	}
+	
+	100% {
+		border-width: 100px;
+		
+		
+	}
+}
+@keyframes time {
+	0% {
+		border-width: 100px;
+		opacity: 100% ;
+		background-size: 1000% 1000%;
+		width: 10%;
+	}
+	
+	100% {
+		border-width: 3px;
+		opacity: 10%;
+		background-size: 100% 100%;
+		
+	}
+}

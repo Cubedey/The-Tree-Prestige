@@ -35,17 +35,20 @@ function getPointGen() {
 
 	let gain = new Decimal(1)
 	let base = new Decimal(1)
-	if (player.c.points > 0 &&! (getBuyableAmount("m", 31) > 0)) {base = base.add(1).pow(player.c.points.pow(.8))}
-	else if (getBuyableAmount("m", 31) > 0 && player.c.points > 0) {base = new Decimal(2).pow((new Decimal(22).sub((new Decimal(22).sub(new Decimal(2))).div((player.c.points.log(2)).add(1))))).times(upgradeEffect("c", 11)).times(getMBuyableEff(21))}
+	if (player.c.points.gte(1) &&! (getBuyableAmount("m", 31) > 0)) {base = base.add(1).pow(player.c.points.pow(.8)).times(getBuyableEff("m", 21)).pow(new Decimal(1.1).pow(player.o.points))}
+	else if (getBuyableAmount("m", 31) > 0 && player.c.points > 0) {base = new Decimal(2).pow((new Decimal(22).sub((new Decimal(22).sub(new Decimal(2))).div((player.c.points.log(2)).add(1))))).times(upgradeEffect("c", 11)).times(getBuyableEff("m", 21)).pow(new Decimal(1.1).pow(player.o.points))}
 	if (hasUpgrade("c", 11)) {base = base.times(upgradeEffect("c", 11))}
 	if (hasMilestone("c", 2)) {base = base.times(player.c.WaterMultiplier.pow(.2))}
-	if (player.m.points.gte(1) && player.c.points > 0) {base = base.times(getMBuyableEff(21))}
-	if (player.m.points > 0) base = base.times((player.m.points.times(player.m.points).add(1)))
+	if (player.m.points.gte(1) && player.c.points > 0) {base = base.times(getBuyableEff("m",21))}
+	if (player.m.points.gte(1)) base = base.times((player.m.points.times(player.m.points).add(1)))
+	if (player.o.points.gte(1)) base = base.times(new Decimal(10).pow(player.o.points))
 	gain = base
 	if (hasUpgrade("p", 11)) gain = gain.times(upgradeEffect("p", 11))
 	if (hasUpgrade("p", 13)) gain = gain.times(upgradeEffect("p", 13))
 	if (hasUpgrade("p", 14)) gain = gain.times(upgradeEffect("p", 14))
-	
+	if (hasUpgrade("p", 21)) gain = gain.times(upgradeEffect("p", 21))
+	if (player.o.sooond.gte(1)) gain = gain.times(player.o.sooond.pow(new Decimal(1).div(10)))
+	//if (player.o.scoooles.gte(1)) gain = gain.times(player.o.scoooles.pow(new Decimal(1).div(1000)))
 	if (gain < 1 && base > 0) {gain = base} 
 	if (gain.lt(1)) {gain = new Decimal(1)}
 	return gain
@@ -86,7 +89,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.p.points.gte(new Decimal("e750"))
+	return player.p.points.gte(new Decimal("e200000"))
 }
 
 
