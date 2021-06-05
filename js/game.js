@@ -5,8 +5,8 @@ var time;
 
 // Don't change this
 const TMT_VERSION = {
-	tmtNum: "2.6",
-	tmtName: "Dreams Really Do Come True"
+	tmtNum: "2.6.0.1",
+	tmtName: "Fixed Reality"
 }
 
 function getResetGain(layer, useType = null) {
