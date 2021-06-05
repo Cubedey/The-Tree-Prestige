@@ -16,10 +16,7 @@
 }
 
 body {
-	background-color: var(--background);
-	background-blend-mode: multiply;
-	background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://wallpapercave.com/wp/wp3713497.jpg');
-	
+
 	background-size: cover;
 	background-position: 0px -100px;
 	color: var(--color);
@@ -27,12 +24,17 @@ body {
 	--background: #0f0f0f;
 	--color: #dfdfdf;
 	--points: #ffffff;
-	background: var(--background)
+	background: var(--background);
+	
 }
 
 html, body {
 	min-height: 100%;
-	height: 100%;
+	height: 100%;	
+	background-image: linear-gradient( rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25) ),url(https://wallpapercave.com/wp/wp3713497.jpg);
+	background-size: cover;
+	background-position-y: -100px;
+
 }
 
 td {
@@ -85,18 +87,8 @@ h1, h2, h3, b, input {
 	padding: 0;
 	margin: 0 10px 0 10px;
 }
-.educationbox {
-	background-color: transparent;
-	width: 300px;
-	border: 15px solid rgb(0, 0, 0);
-	padding: 50px;
-	margin: 20px;
-}
-.smallNode {
-	height: 60px;
-	width: 60px;
 
-}
+
 .treeButton {
 	height: 100px;
 	width: 100px;
@@ -290,7 +282,6 @@ h1, h2, h3, b, input {
 	border: 2px solid;
 	border-color: rgba(0, 0, 0, 0.125);
 	font-size: 10px;
-	background-size: cover;
 	position:relative;
 }
 
@@ -710,7 +701,6 @@ button > * {
     pointer-events: none;
     width: 1em;
     display: inline-block;
-    margin-right: -12px;
 }
 
 .story-text {
@@ -890,10 +880,3 @@ button > * {
 	background-color: var(--background);
 	top: 0
 }
-
-.noBackground {
-	background: transparent !important;
-	background-image: none !important;
-	--background: transparent !important;
-}
-
